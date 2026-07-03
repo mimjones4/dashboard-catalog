@@ -1,0 +1,16 @@
+{
+  "name": "mock-interview-simulator",
+  "version": "1.0.0",
+  "description": "AI-powered mock interview simulator: upload your resume and a job description, do a realistic voice/text mock interview, and get structured coaching feedback with cross-session pattern tracking.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.74.0",
+    "express": "^4.21.0"
+  }
+}

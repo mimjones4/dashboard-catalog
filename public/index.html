@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Interview Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🎙️</span>
+      <span class="brand-name">Mock Interview Simulator</span>
+    </div>
+    <nav>
+      <button id="nav-new" class="nav-btn active">New Interview</button>
+      <button id="nav-progress" class="nav-btn">My Progress <span id="session-count" class="badge hidden"></span></button>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ SETUP VIEW ============ -->
+    <section id="view-setup" class="view">
+      <div class="intro">
+        <h1>Practice the interview before it counts.</h1>
+        <p>Upload your resume and paste the job description. You'll get a realistic mock interview tailored to what this specific role actually requires — then detailed, question-by-question coaching feedback.</p>
+      </div>
+
+      <div class="setup-grid">
+        <div class="card">
+          <h2>1. Your resume</h2>
+          <div class="tab-row">
+            <button id="tab-pdf" class="tab active">Upload PDF</button>
+            <button id="tab-text" class="tab">Paste text</button>
+          </div>
+          <div id="resume-pdf-panel">
+            <label id="dropzone" for="resume-file" class="dropzone">
+              <input type="file" id="resume-file" accept="application/pdf" hidden />
+              <span id="dropzone-label">Drop your resume PDF here or <u>browse</u></span>
+            </label>
+          </div>
+          <div id="resume-text-panel" class="hidden">
+            <textarea id="resume-text" rows="10" placeholder="Paste your full resume text here…"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>2. The job description</h2>
+          <textarea id="jd-text" rows="14" placeholder="Paste the full job description for the role you're interviewing for — title, responsibilities, requirements, everything…"></textarea>
+        </div>
+      </div>
+
+      <div class="center">
+        <button id="btn-analyze" class="primary big">Analyze &amp; prepare my interview</button>
+        <p id="setup-error" class="error hidden"></p>
+      </div>
+    </section>
+
+    <!-- ============ ANALYSIS REVIEW VIEW ============ -->
+    <section id="view-analysis" class="view hidden">
+      <div class="intro">
+        <h1 id="analysis-title">Your interview prep</h1>
+        <p>Here's how you stack up against this role, and what the interview will cover. Ready when you are.</p>
+      </div>
+      <div class="analysis-grid">
+        <div class="card">
+          <h2>👤 Your profile</h2>
+          <p id="candidate-summary" class="muted"></p>
+          <h3>Skills</h3>
+          <ul id="candidate-skills" class="chips"></ul>
+          <h3>Gaps to be ready for</h3>
+          <ul id="candidate-gaps" class="warn-list"></ul>
+        </div>
+        <div class="card">
+          <h2>🎯 What this role demands</h2>
+          <h3>Key requirements</h3>
+          <ul id="role-requirements"></ul>
+          <h3>Competencies they'll probe</h3>
+          <ul id="role-competencies"></ul>
+          <h3>Red flags they'll listen for</h3>
+          <ul id="role-redflags" class="warn-list"></ul>
+        </div>
+        <div class="card span-2">
+          <h2>🗺️ Interview plan (<span id="plan-count"></span> questions)</h2>
+          <ol id="question-plan" class="plan-list"></ol>
+          <p class="muted small">The interviewer will phrase these naturally and ask follow-ups when your answers are thin — just like the real thing.</p>
+        </div>
+      </div>
+      <div class="center">
+        <button id="btn-start" class="primary big">Start the interview</button>
+        <button id="btn-back-setup" class="ghost">Back</button>
+      </div>
+    </section>
+
+    <!-- ============ INTERVIEW VIEW ============ -->
+    <section id="view-interview" class="view hidden">
+      <div class="interview-header">
+        <div>
+          <h2 id="interview-role"></h2>
+          <p id="interview-progress" class="muted"></p>
+        </div>
+        <button id="btn-end-early" class="ghost danger">End interview early</button>
+      </div>
+
+      <div id="chat" class="chat"></div>
+
+      <div class="composer card">
+        <textarea id="answer-input" rows="3" placeholder="Type your answer, or use the mic to speak it…"></textarea>
+        <div class="composer-actions">
+          <button id="btn-mic" class="mic" title="Answer by voice">🎤</button>
+          <button id="btn-send" class="primary">Send answer</button>
+        </div>
+        <p id="mic-status" class="muted small hidden"></p>
+        <p id="interview-error" class="error hidden"></p>
+      </div>
+    </section>
+
+    <!-- ============ FEEDBACK VIEW ============ -->
+    <section id="view-feedback" class="view hidden">
+      <div class="intro">
+        <h1>Your feedback</h1>
+        <p id="feedback-role" class="muted"></p>
+      </div>
+
+      <div class="card highlight">
+        <h2>Overall</h2>
+        <p id="overall-summary"></p>
+        <div class="two-col">
+          <div>
+            <h3>💪 Top strengths</h3>
+            <ul id="overall-strengths"></ul>
+          </div>
+          <div>
+            <h3>🔧 Fix these first</h3>
+            <ul id="overall-priorities" class="warn-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Question-by-question</h2>
+      <div id="per-question"></div>
+
+      <div id="feedback-patterns-block" class="hidden">
+        <h2 class="section-title">📈 Patterns across your mock interviews</h2>
+        <div id="feedback-patterns"></div>
+      </div>
+
+      <div class="center">
+        <button id="btn-new-interview" class="primary big">Practice another interview</button>
+        <button id="btn-view-progress" class="ghost">View my progress</button>
+      </div>
+    </section>
+
+    <!-- ============ PROGRESS VIEW ============ -->
+    <section id="view-progress" class="view hidden">
+      <div class="intro">
+        <h1>My progress</h1>
+        <p>Every mock interview you complete is saved in this browser. Once you have two or more, patterns across sessions show up here.</p>
+      </div>
+      <div id="sessions-list"></div>
+      <div id="progress-patterns-wrap" class="hidden">
+        <div class="center">
+          <button id="btn-analyze-patterns" class="primary">Analyze my patterns</button>
+        </div>
+        <div id="progress-patterns"></div>
+        <p id="patterns-error" class="error hidden center"></p>
+      </div>
+      <p id="no-sessions" class="muted center hidden">No completed interviews yet. Do your first mock and it'll show up here.</p>
+    </section>
+
+    <!-- ============ LOADING OVERLAY ============ -->
+    <div id="overlay" class="overlay hidden">
+      <div class="spinner"></div>
+      <p id="overlay-text">Working…</p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
