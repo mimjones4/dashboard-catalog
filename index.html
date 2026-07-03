@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PawPlan — your dog's 6-week training program</title>
+</head>
+<body>
+<!--ARTIFACT-->
+<style>
+:root{
+  --page:#f7f5f0; --card:#fdfcf9; --card-2:#f2efe8;
+  --ink:#1a1915; --ink-2:#57544a; --ink-3:#8b877b;
+  --accent:#068a71; --accent-ink:#04644f; --accent-wash:rgba(6,138,113,.09);
+  --grid:#e5e2d9; --baseline:#c9c5b8; --hairline:rgba(26,25,21,.10);
+  --good:#006300; --bad:#b32d2d; --hold:#8a5a00; --hold-wash:rgba(250,178,25,.14);
+  --good-wash:rgba(12,163,12,.10); --bad-wash:rgba(208,59,59,.10);
+  --shadow:0 1px 2px rgba(26,25,21,.05),0 4px 14px rgba(26,25,21,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page:#141412; --card:#1d1c1a; --card-2:#26241f;
+    --ink:#f4f2ec; --ink-2:#bcb8ab; --ink-3:#8b877b;
+    --accent:#0aa98b; --accent-ink:#3cc4a8; --accent-wash:rgba(10,169,139,.14);
+    --grid:#2d2b27; --baseline:#3c3a34; --hairline:rgba(255,255,255,.10);
+    --good:#25b325; --bad:#e66767; --hold:#e3a63a; --hold-wash:rgba(250,178,25,.12);
+    --good-wash:rgba(12,163,12,.14); --bad-wash:rgba(230,103,103,.12);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --page:#141412; --card:#1d1c1a; --card-2:#26241f;
+  --ink:#f4f2ec; --ink-2:#bcb8ab; --ink-3:#8b877b;
+  --accent:#0aa98b; --accent-ink:#3cc4a8; --accent-wash:rgba(10,169,139,.14);
+  --grid:#2d2b27; --baseline:#3c3a34; --hairline:rgba(255,255,255,.10);
+  --good:#25b325; --bad:#e66767; --hold:#e3a63a; --hold-wash:rgba(250,178,25,.12);
+  --good-wash:rgba(12,163,12,.14); --bad-wash:rgba(230,103,103,.12);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+}
+:root[data-theme="light"]{
+  --page:#f7f5f0; --card:#fdfcf9; --card-2:#f2efe8;
+  --ink:#1a1915; --ink-2:#57544a; --ink-3:#8b877b;
+  --accent:#068a71; --accent-ink:#04644f; --accent-wash:rgba(6,138,113,.09);
+  --grid:#e5e2d9; --baseline:#c9c5b8; --hairline:rgba(26,25,21,.10);
+  --good:#006300; --bad:#b32d2d; --hold:#8a5a00; --hold-wash:rgba(250,178,25,.14);
+  --good-wash:rgba(12,163,12,.10); --bad-wash:rgba(208,59,59,.10);
+  --shadow:0 1px 2px rgba(26,25,21,.05),0 4px 14px rgba(26,25,21,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--page); color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:880px;margin:0 auto;padding:24px 20px 80px}
+a{color:var(--accent-ink)}
+button{font:inherit;color:inherit;cursor:pointer}
+:is(button,input,select,summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* header */
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:2px 0 4px;text-wrap:balance}
+.tagline{color:var(--ink-2);margin:0;font-size:15px}
+[hidden]{display:none !important}
+.dogchip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--hairline);border-radius:999px;padding:7px 16px 7px 8px;box-shadow:var(--shadow)}
+.dogchip .ava{width:34px;height:34px;border-radius:50%;background:var(--accent-wash);display:grid;place-items:center;font-size:17px}
+.dogchip b{font-size:14px;display:block;line-height:1.2}
+.dogchip span{font-size:12px;color:var(--ink-2)}
+
+/* tabs */
+nav.tabs{display:flex;gap:4px;margin:20px 0 24px;border-bottom:1px solid var(--hairline);flex-wrap:wrap}
+nav.tabs button{background:none;border:none;padding:10px 14px;font-weight:600;font-size:15px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:6px 6px 0 0}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink);background:var(--accent-wash)}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--hairline);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 4px}
+.card h3{font-size:15px;font-weight:700;margin:18px 0 6px}
+.card .sub{color:var(--ink-2);font-size:14px;margin:0 0 12px}
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 10px;vertical-align:middle}
+.pill.acc{background:var(--accent-wash);color:var(--accent-ink)}
+.pill.good{background:var(--good-wash);color:var(--good)}
+.pill.bad{background:var(--bad-wash);color:var(--bad)}
+.pill.hold{background:var(--hold-wash);color:var(--hold)}
+.note{background:var(--card-2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink-2)}
+.note b{color:var(--ink)}
+
+/* session timeline */
+.blocks{display:flex;flex-direction:column;gap:0;margin-top:14px}
+.block{display:grid;grid-template-columns:86px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--hairline)}
+.block:first-child{border-top:none;padding-top:4px}
+.block .time{font-size:12.5px;font-weight:700;color:var(--accent-ink);font-variant-numeric:tabular-nums;padding-top:2px;white-space:nowrap}
+.block h4{margin:0 0 4px;font-size:15px}
+.block p, .block li{font-size:14.5px;color:var(--ink-2);margin:0}
+ol.steps{margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+ol.steps li{padding-left:4px}
+ol.steps li::marker{font-weight:700;color:var(--accent-ink)}
+.daychip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-wash);color:var(--accent-ink);font-size:13px;font-weight:600;border-radius:8px;padding:5px 10px;margin:2px 0 8px}
+
+/* tracker steppers */
+.trackrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--hairline);flex-wrap:wrap}
+.trackrow:first-of-type{border-top:none}
+.trackrow .q{font-size:14.5px;max-width:520px}
+.trackrow .q b{display:block;font-size:15px}
+.trackrow .q span{color:var(--ink-2);font-size:13.5px}
+.stepper{display:flex;align-items:center;gap:2px;background:var(--card-2);border-radius:999px;padding:3px}
+.stepper button{width:36px;height:36px;border:none;border-radius:50%;background:var(--card);box-shadow:var(--shadow);font-size:18px;font-weight:700;line-height:1;color:var(--ink-2)}
+.stepper button:hover{color:var(--accent-ink)}
+.stepper output{min-width:44px;text-align:center;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.bigbtn{display:block;width:100%;border:none;border-radius:11px;background:var(--accent);color:#fff;font-weight:700;font-size:15.5px;padding:13px;margin-top:14px}
+:root[data-theme="dark"] .bigbtn, .bigbtn{color:#fff}
+.bigbtn.done{background:var(--card-2);color:var(--good)}
+.bigbtn:hover{filter:brightness(1.06)}
+.ghostbtn{border:1px solid var(--hairline);background:none;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;color:var(--ink-2)}
+.ghostbtn:hover{background:var(--accent-wash);color:var(--accent-ink)}
+
+/* KPI tiles */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.tile{background:var(--card);border:1px solid var(--hairline);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.tile .lbl{font-size:13px;color:var(--ink-2);margin-bottom:2px}
+.tile .val{font-size:30px;font-weight:700;letter-spacing:-.01em}
+.tile .delta{font-size:13px;font-weight:600;margin-top:2px}
+.delta.good{color:var(--good)} .delta.bad{color:var(--bad)} .delta.flat{color:var(--ink-3)}
+
+/* charts */
+.chartcard .head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.statmini{display:flex;align-items:center;gap:16px;margin:8px 0 4px;flex-wrap:wrap}
+.statmini .val{font-size:26px;font-weight:700}
+.statmini .unit{font-size:13px;color:var(--ink-2)}
+svg.chart{display:block;width:100%;height:auto}
+svg text{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--ink-3)}
+svg .caplbl{fill:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
+svg .axis{font-variant-numeric:tabular-nums}
+.chartwrap{position:relative}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--page);border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.4;box-shadow:var(--shadow);opacity:0;transition:opacity .12s;transform:translate(-50%,-100%);white-space:nowrap;z-index:5}
+.tip b{font-size:14px}
+details.tbl{margin-top:10px}
+details.tbl summary{font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer}
+details.tbl table{border-collapse:collapse;margin-top:8px;font-size:13.5px;min-width:280px}
+details.tbl th{ text-align:left;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--grid);padding:5px 14px 5px 0}
+details.tbl td{border-bottom:1px solid var(--grid);padding:5px 14px 5px 0;font-variant-numeric:tabular-nums}
+.tblscroll{overflow-x:auto}
+
+/* report */
+.report .beh{border-top:1px solid var(--hairline);padding:14px 0}
+.report .beh:first-of-type{border-top:none}
+.report .headline{font-size:16px;font-weight:700;margin:0 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.report p{font-size:14px;color:var(--ink-2);margin:4px 0 0}
+
+/* plan accordions */
+details.week{border:1px solid var(--hairline);border-radius:11px;margin-top:10px;background:var(--card);overflow:hidden}
+details.week summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;font-weight:600;font-size:14.5px}
+details.week summary::-webkit-details-marker{display:none}
+details.week summary .wk{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);min-width:58px}
+details.week[open] summary{border-bottom:1px solid var(--hairline)}
+details.week .body{padding:14px 18px 16px;font-size:14.5px;color:var(--ink-2)}
+details.week.current{border-color:var(--accent)}
+details.week .body .win{margin-top:10px}
+
+/* forms */
+.field{margin-bottom:16px}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.field input[type=text],.field input[type=number]{width:100%;max-width:340px;padding:10px 12px;border:1px solid var(--baseline);border-radius:9px;background:var(--card);color:var(--ink);font:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--baseline);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.hint{font-size:13px;color:var(--ink-3);margin-top:6px}
+.setuprow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.empty{color:var(--ink-2);font-size:14.5px}
+footer.app{margin-top:34px;color:var(--ink-3);font-size:12.5px;text-align:center}
+@media (max-width:560px){ .block{grid-template-columns:1fr} .block .time{padding-top:0} h1{font-size:25px} }
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">PawPlan</div>
+      <h1 id="appTitle">Six weeks to a better-behaved dog</h1>
+      <p class="tagline">Ten good minutes a day. That's the whole deal — and it works.</p>
+    </div>
+    <div class="dogchip" id="dogChip" hidden>
+      <div class="ava">🐕</div>
+      <div><b id="chipName"></b><span id="chipMeta"></span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="today" aria-selected="true">Today</button>
+    <button role="tab" data-tab="plan" aria-selected="false">6-Week Plan</button>
+    <button role="tab" data-tab="progress" aria-selected="false">Progress</button>
+    <button role="tab" data-tab="setup" aria-selected="false">Setup</button>
+  </nav>
+
+  <main>
+    <section id="tab-today" role="tabpanel"></section>
+    <section id="tab-plan" role="tabpanel" hidden></section>
+    <section id="tab-progress" role="tabpanel" hidden></section>
+    <section id="tab-setup" role="tabpanel" hidden></section>
+  </main>
+
+  <footer class="app">Positive reinforcement only — we train the dog in front of us, and we pay well. 🐾</footer>
+</div>
+
+<script>
+'use strict';
+/* ---------------------------------------------------------------- data */
+const SKILLS = [
+  {id:'sit',label:'Sit'},{id:'down',label:'Down'},{id:'stay',label:'Stay'},
+  {id:'recall',label:'Recall (come)'},{id:'leave',label:'Leave it'},
+  {id:'touch',label:'Touch (hand target)'},{id:'place',label:'Go to mat / place'},
+  {id:'loose',label:'Loose-leash basics'},{id:'crate',label:'Crate comfort'},{id:'heel',label:'Heel'}
+];
+
+const DAY_ARC = [
+  {t:'Day 1 · Baseline', n:'Run today’s steps exactly as written. Count your wins — you’ll want that number later.'},
+  {t:'Day 2 · Repetition', n:'Same steps, more reps. Fluency comes from volume, and your dog is faster today than yesterday.'},
+  {t:'Day 3 · Mild distraction', n:'Same steps with one small distraction added: TV on, a family member walking by, a toy on the floor.'},
+  {t:'Day 4 · Change the picture', n:'New room, new corner of the yard, new stretch of sidewalk. Skills don’t transfer on their own — take the show on the road.'},
+  {t:'Day 5 · Stretch one dial', n:'Push exactly one thing: a bit more duration, distance, or difficulty. One dial, never two.'},
+  {t:'Day 6 · Dress rehearsal', n:'String the steps into one real-life run-through, start to finish.'},
+  {t:'Day 7 · Easy-win day', n:'Cut the difficulty in half and stack up wins. Ending the week feeling like a champion IS the training.'}
+];
+
+const PREREQ_TEACH = {
+  sit: {label:'Sit', teach:[
+    'Hold a treat to your dog’s nose and lift it slowly up and back over their head. As the nose goes up, the bottom goes down.',
+    'The instant the hips hit the floor, mark ("Yes!") and feed.',
+    'After 5 lured reps, ditch the treat in your hand: same hand motion, empty hand, feed from the other hand. That motion is your hand signal.',
+    'Add the word: say "sit," pause a beat, then give the hand signal. Ten reps and the word starts working on its own.']},
+  place: {label:'Go to mat', teach:[
+    'Put a mat or dog bed on the floor. Toss a treat onto it. As your dog steps on, mark ("Yes!") and drop a second treat on the mat.',
+    'Release with "free!" and toss a treat off the mat. Repeat — on the mat pays, coming back to the mat pays more.',
+    'Wait your dog out: stand near the mat and say nothing. Any step toward it, mark and pay on the mat.',
+    'Add the cue "place" right before they head to the mat. Feed a few extra treats between the paws for lying down.']}
+};
+
+/* Each behavior: 6 weekly stages. steps = the exact technique for that stage. */
+const BEHAVIORS = {
+  jumping: {
+    label:'Jumping on guests', short:'Jumping', icon:'🦘',
+    question:'How many times did your dog jump on a person today?',
+    blurb:'Jumping is a greeting, not a rebellion — your dog is aiming for faces because that’s where the love is. We’ll teach a greeting that pays better.',
+    prereq:'sit',
+    weeks:[
+      {title:'Four on the floor — with you', goal:'Teach that four paws on the ground is what makes attention happen.',
+       steps:[
+        'Grab 20 pea-sized treats. Stand in front of your dog and say nothing.',
+        'The instant all four paws are on the floor, mark ("Yes!") and drop a treat on the floor between their front paws. Feeding low keeps heads and paws down.',
+        'If your dog jumps, become a statue: silent, hands folded, eyes on the ceiling. The moment paws land, mark and drop another treat.',
+        'Repeat 15–20 times. You’re paying rent for a floor-level dog.',
+        'Finish with 30 seconds of calm petting while paws stay down — petting is a paycheck too, so spend it on the behavior you want.'],
+       win:'Mark the exact second paws hit the floor. Timing is the technique.',
+       easier:'Work behind a baby gate or with a leash tethered to furniture so jumping physically can’t reach you.'},
+      {title:'Sit is the new hello', goal:'Make sit the default greeting for everyone who lives with your dog.',
+       steps:[
+        'Leash on, stand 6 feet from the front door with treats ready.',
+        'A housemate walks in — calm, boring, zero eye contact with the dog.',
+        'Cue "sit." The instant the bottom lands, your helper approaches and pets for 3 seconds while you feed at nose height.',
+        'Paws come up? The helper silently backs out the door for 10 seconds, then you retry. Sitting brings people closer; jumping makes them vanish.',
+        'Run 8–10 entries, swapping roles halfway so your dog learns the rule applies to everyone.'],
+       win:'Reward during the greeting, not after — sit has to pay while the exciting thing is happening.',
+       easier:'Add distance from the door and make your helper even more boring.'},
+      {title:'The doorbell means treats now', goal:'Rewire the doorbell from chaos trigger to treat forecast.',
+       steps:[
+        'Ring the doorbell (or knock) with nobody actually there. Wait out the explosion without a word.',
+        'Scatter 5 treats on the floor away from the door. Repeat ring-then-scatter 10 times — the bell starts to mean "look down, good things land here."',
+        'If your dog knows a mat, send them to it after the ring and pay generously there.',
+        'Second half: one calm friend enters, Week 2 rules — sit earns approach, jumping turns the friend away.',
+        'Keep greetings to 3 seconds of petting, then the friend steps back, then re-greet. Short wins beat one long meltdown.'],
+       win:'Pay generously at the scatter or mat — the doorbell should predict treats, not takeoff.',
+       easier:'Muffle the bell (play a recording at low volume) and skip the live guest until reps are smooth.'},
+      {title:'Excited people, same rules', goal:'Hold the polite greeting against real human enthusiasm.',
+       steps:[
+        'Same setup, but your helper now acts like an actual guest: big voice, quick movement, direct eye contact.',
+        'If the sit holds, the helper greets warmly while you run a treat metronome — one treat every 2 seconds at nose height.',
+        'Paws launch? Helper instantly turns their back and walks 3 steps away. Reset and retry — the rule never bends.',
+        'Add a release word ("Okay — say hi!") so polite hellos happen on your cue, not on impulse.',
+        'Six to eight reps, then a sniffy break. Greeting practice is heavy mental lifting.'],
+       win:'Reward the calm before the release, party after it. The release cue is gold.',
+       easier:'Dial the helper’s energy back to 50% and rebuild from there.'},
+      {title:'Real guests, real reps', goal:'Take the trained greeting live with actual visitors.',
+       steps:[
+        'Line up 2–3 real arrivals this week (a chatty neighbor at the door counts). Leash on for every one.',
+        'Run the chain: doorbell → treat scatter or mat → sit → guest greets on your release.',
+        'Coach every guest with one sentence: "Please only pet him while he’s sitting." Managing humans is half this job.',
+        'Thin the food: one treat when the sit happens, one during the greeting. Warm praise fills the gaps.',
+        'Between visits, do 5 surprise doorbell reps with nobody there to keep the pattern crisp.'],
+       win:'A guest who follows your one rule is worth more than a perfect rep — brief them every time.',
+       easier:'Go back to a family member playing guest, or greet outside where there’s more space.'},
+      {title:'Off leash and automatic', goal:'Polite greetings without the leash — and habits that last for life.',
+       steps:[
+        'Drop the leash (inside the house). Doorbell rings — wait. Your dog should head to the mat or offer a sit on their own. Don’t cue it; let them solve it.',
+        'Jackpot the automatic sit: three treats, fed one at a time, with real praise.',
+        'Real guests greet on your release, four on the floor throughout. If a jump sneaks through, the guest turns away — same rule as Week 1.',
+        'Shift to life rewards: sitting now earns the door opening, the leash clipping on, the guest’s attention.',
+        'Keep a treat jar by the door permanently. A surprise payday now and then keeps polite greetings strong forever.'],
+       win:'Reward randomly now — unpredictable paydays build unshakeable habits.',
+       easier:'Keep the leash on for arrivals another week. Management is never cheating.'}
+    ]
+  },
+  leash: {
+    label:'Leash pulling', short:'Pulling', icon:'🦮',
+    question:'How many times did your dog hit the end of the leash and pull today?',
+    blurb:'Dogs pull because it works — the world moves when they lean. We’ll make walking next to you the best-paying spot on the block.',
+    prereq:null,
+    weeks:[
+      {title:'The magnet zone (no leash yet)', goal:'Make the spot at your left side a treat vending machine.',
+       steps:[
+        'In a hallway or living room, no leash, 20 treats in your pocket.',
+        'Any time your dog arrives at your left side, mark ("Yes!") and feed right at the seam of your pants. That exact spot is now the magnet zone.',
+        'Take one step. When your dog lands back at your side, mark and feed at the seam again.',
+        'Build to 5–6 steps between treats, always feeding in position.',
+        'Add your walking cue — "Let’s go!" — right before you step off, so the walk has an on-switch.'],
+       win:'Feed at your pant seam, never in front of you. Placement builds position.',
+       easier:'Higher-value treats (chicken, cheese) and a quieter room.'},
+      {title:'One-two-three, treat', goal:'Put walking on a rhythm your dog can predict and win.',
+       steps:[
+        'Clip the leash on indoors or in the yard. Keep it loose and boring — it’s a safety line, not a steering wheel.',
+        'Walk and count out loud: "one, two, three" — feed at the seam on three. The rhythm tells your dog exactly when payday comes.',
+        'Leash goes tight? Stop dead and be a tree. The second it slackens or your dog glances back, mark, invite them to your side, feed, restart the count.',
+        'Pattern-walk for the full session. Boring for you; total clarity for them.',
+        'End with a minute of free sniffing on a "go sniff!" release. Sniffing is dog salary — pay it.'],
+       win:'Never move forward on a tight leash. Forward motion is the biggest reward on any walk.',
+       easier:'Back indoors, and count to two instead of three.'},
+      {title:'Take it to the street', goal:'Keep the loose leash where the smells live.',
+       steps:[
+        'Quiet street, low-traffic hour. Run the one-two-three pattern for the first 3 minutes.',
+        'Stretch the schedule: feed every 5–8 steps as long as the leash stays soft.',
+        'Play direction changes: say their name, turn 180°, mark when they catch up to your seam, feed. Five of these, snappy and fun.',
+        'Tight leash = the world stops. Loose leash = the world moves. Every single time, no exceptions.',
+        'Finish at a great sniff spot with a long "go sniff!" — end every walk on salary.'],
+       win:'Pay the check-ins — every voluntary glance at you on the street is worth a treat this week.',
+       easier:'Just the sidewalk in front of home. Shorter, better reps.'},
+      {title:'Distractions at a distance', goal:'Hold the habit when the world gets interesting.',
+       steps:[
+        'Pick a route where the exciting stuff — dogs, squirrels, kids — appears far away.',
+        'The moment your dog notices a distraction, mark and feed at the seam before the pull starts. You’re paying for noticing without launching.',
+        'Can’t take the treat? You’re too close. Add distance until they can, and work there. Distance is the technique, not a defeat.',
+        'Use sniffing as premium pay: a loose leash past the distraction earns "go sniff!" at the next patch of grass.',
+        'Three passes per distraction, then move on. Short and winnable.'],
+       win:'Reinforce early — before the pull, not after. Anticipate and pay.',
+       easier:'Double your distance from distractions and feed every 3 steps again.'},
+      {title:'Busier routes, thinner payroll', goal:'Real routes at real times, with smarter rewards.',
+       steps:[
+        'Your normal route at a normal hour. Pattern-walk the first 2 minutes as a warm-up.',
+        'Now pay only the highlights: check-ins near distractions, auto-slowing when the leash starts to tighten, snappy catch-ups after turns.',
+        'Throw surprise jackpots — occasionally 3 treats in a row for gorgeous walking. Unpredictable pay builds gamblers.',
+        'The tree rule stays sacred: tight leash stops the world, even when it’s inconvenient.',
+        'One structured sniff break for every 5 minutes of nice walking.'],
+       win:'Randomize the rewards — your dog should walk like every step might pay.',
+       easier:'Drop back to the Week 3 street and rebuild the rhythm.'},
+      {title:'Walks that stay this good', goal:'Lock it in for life with maintenance you’ll actually do.',
+       steps:[
+        'Full walks, real life. Bring 5–10 treats, not the whole pouch.',
+        'Pay only the standouts: tough distractions passed politely, beautiful check-ins.',
+        'Let life rewards do the daily work: a loose leash earns forward motion, sniff spots, and greetings.',
+        'If pulling creeps back on a route, run one 10-minute pattern-walk tune-up right there. It comes back fast.',
+        'Once a month, walk one full one-two-three rhythm walk to keep the habit crisp forever.'],
+       win:'The leash is a conversation now. Keep answering the polite asks.',
+       easier:'Carry the pouch one more week and pay check-ins more often.'}
+    ]
+  },
+  separation: {
+    label:'Separation anxiety', short:'Alone-time distress', icon:'🚪',
+    question:'How many alone-time distress episodes (barking, whining, destruction, accidents) today?',
+    blurb:'This isn’t disobedience — it’s panic. We treat it the only way that works: proving, in tiny slices your dog can handle, that you always come back. One rule above all: never push past distress.',
+    prereq:'place',
+    weeks:[
+      {title:'Calm is the skill', goal:'Build a relaxation habit and drain the meaning out of departure cues.',
+       steps:[
+        'Put a mat or bed in the living room. Toss a treat on it, and mark any four-paws-on-mat moment. Feed on the mat.',
+        'Sit nearby with a book or your phone. Quietly feed every real sign of settling: hips rolled over, chin down, a big sigh. Calm earns; hustle doesn’t.',
+        'Rehearse fake departures with zero departure: pick up your keys, sit back down. Put shoes on, watch TV. Ten reps, completely boring.',
+        'If your dog stays relaxed through a cue, a treat lands casually on the mat.',
+        'No extra alone time this week beyond what life requires — we defuse the scary stuff before we practice it.'],
+       win:'Pay the sighs and the flopped hips. You’re rewarding a state of mind, not a trick.',
+       easier:'Same work with your dog on a leash beside you, so wandering off isn’t an option.'},
+      {title:'Out of sight, still fine', goal:'Seconds of separation inside the house, below the worry line.',
+       steps:[
+        'With your dog settled on the mat, stand up, walk through an inside doorway (bathroom, bedroom), and come straight back. Sit down, ignore your dog for 10 seconds, then a calm treat on the mat.',
+        'Repeat, varying the door and the seconds (1 to 10). Boring exits, boring returns — no goodbyes, no parties.',
+        'Watch for early stress: pacing, whining, shadowing you. See it? Cut the next rep’s time in half.',
+        'Mix in fake-outs: stand up, stretch, sit back down. Standing up shouldn’t predict leaving.',
+        'End every session with something great — a stuffed food toy or a sniffy game.'],
+       win:'Returns are a non-event. The message is: this is so normal it’s boring.',
+       easier:'Just walk to the doorway without stepping through. Seconds count as wins here.'},
+      {title:'The front door, for seconds', goal:'Real exits measured in seconds, mixed easy-and-hard.',
+       steps:[
+        'Same drill at the real front door: open, step out, close, count 5, come back in. Sit down like nothing happened.',
+        'Ladder the seconds unevenly: 5, 15, 8, 30, 10, 45, 20. Always fold easy reps between hard ones.',
+        'Add one real departure cue per rep — keys in pocket, or jacket on. Never the whole costume at once.',
+        'Any rep that triggers barking or scratching means the ladder grew too fast: run the next 3 reps at half the time.',
+        'Two short sessions today beats one long one — but never right after a meal or mid-zoomies.'],
+       win:'Your dog choosing to stay settled while the door opens is the whole game. Pay it.',
+       easier:'Open and close the door without stepping out, until that’s boring.'},
+      {title:'Minutes, not seconds', goal:'One to five real minutes alone, verified calm on camera.',
+       steps:[
+        'Set up a camera — a propped phone on a video call works fine. You need eyes on the room after the door shuts.',
+        'Put down a stuffed food toy, run your normal leaving routine, and go for 1–5 minutes. Keep the ladder uneven.',
+        'Read the camera honestly: settled and quiet is a win; pacing or whining means shorten the next rep; barking or destruction means stop for today and restart tomorrow at Week 3 times.',
+        'Return like a coworker walking to the printer — neutral and quiet. Calm hellos after four paws settle.',
+        'Three or four departures per session, easy ones wrapped around the hard ones.'],
+       win:'A dog who’s asleep when you get back is an A+. Count the quiet minutes — they’re the score.',
+       easier:'Back to 30–60 second reps with the full departure routine.'},
+      {title:'Real absences, randomized', goal:'Five to twenty minutes, unpredictable and boring.',
+       steps:[
+        'This week: 5–20 minute departures with the camera on and a food toy down. Run real errands — the mailbox, a coffee, around the block.',
+        'Randomize hard: 15, 5, 20, 8. Predictable schedules build clock-watching; randomness builds trust.',
+        'Scramble the cue mix: sometimes keys but no jacket, jacket but no keys. Departure cues should stop being reliable predictions.',
+        'Log every episode in the tracker honestly — the camera keeps you honest, and the trend is your proof it’s working.',
+        'Arrivals stay ultra-boring. Big reunions soothe your feelings, not your dog’s.'],
+       win:'Every calm return deposits trust in the bank. Consistency is the medicine.',
+       easier:'Cap at 10 minutes and add white noise or a radio for departures.'},
+      {title:'The routine for life', goal:'Thirty to sixty minutes calm — and a maintenance plan that protects it.',
+       steps:[
+        'Stretch to 30–60 minutes with the same camera-and-food-toy setup. A calm hour unlocks most of normal life.',
+        'Before any long absence, run a warm-up departure: a 2-minute out-and-back about 10 minutes before you really leave.',
+        'Bank calm beforehand — a sniffy walk before alone time is worth more than any calming gadget.',
+        'Maintenance forever: 2–3 short practice departures a week, even when everything is going great.',
+        'If regression hits (moves and schedule changes do this), drop back two weeks in this plan without guilt. You’ll climb back fast — the foundation is real now.'],
+       win:'You built trust, not tolerance. Protect it with warm-ups and calm routines.',
+       easier:'Hold at 20–30 minutes another week. With separation work, slow is fast.'}
+    ]
+  },
+  barking: {
+    label:'Reactive barking', short:'Barking outbursts', icon:'📢',
+    question:'How many barking outbursts (on leash, at the window, at the fence) today?',
+    blurb:'Reactive barking is a too-close alarm, not defiance. The fix is distance plus a better deal: triggers start predicting treats, and your dog starts checking in with you instead of exploding.',
+    prereq:null,
+    weeks:[
+      {title:'Find the line', goal:'Learn your dog’s threshold and load the marker word.',
+       steps:[
+        'Charge your marker at home: say "Yes!", feed a treat. Twenty fast reps — the word must predict food anywhere, always.',
+        'Find the threshold: the distance where your dog sees the trigger (dog, person, bike) but can still eat and think. Write it down — 15 feet? 50? A parking lot across from a park is gold for this.',
+        'Window barker? Manage the view today: close blinds or put cheap frosted film on the barking window. Every rehearsal of barking builds more barking.',
+        'Warm up Engage-Disengage with mild stuff at home: dog looks at a small sound → mark → head whips back to you → feed.',
+        'No trigger practice yet beyond scouting the line. This is information week.'],
+       win:'Reward the head-turn back to you — that’s the muscle we build for six weeks.',
+       easier:'Start with sounds only — recorded barks at low volume — before visuals.'},
+      {title:'Look at that, get paid', goal:'Trigger appears → payday. Build the loop at a safe distance.',
+       steps:[
+        'Set up at threshold distance from a predictable trigger zone — a park entrance, a sidewalk across the street.',
+        'The instant your dog notices the trigger — ears up, little freeze — mark ("Yes!"). When they turn to you for the treat, feed.',
+        'Won’t turn back, or can’t eat? You’re too close. Add 10 feet without apology — distance IS the technique.',
+        'Ten to fifteen trigger sightings, then leave. Short sessions protect progress.',
+        'After a hard rep, scatter 4–5 treats in the grass. Sniffing brings the heart rate down.'],
+       win:'Notice → mark → check-in. Pay every lap of that loop generously.',
+       easier:'Double the distance and upgrade to rotisserie chicken. Seriously.'},
+      {title:'Closing the gap', goal:'Shrink the distance while the loop holds.',
+       steps:[
+        'Same game, 10–20% closer than last week. One dial at a time.',
+        'Start jackpotting the auto check-in: your dog sees the trigger and looks at you before you mark? Three treats, one at a time.',
+        'Use the treat scatter as an active reset after every third rep.',
+        'Have an "oops" plan: if your dog erupts, no drama — happy voice ("this way!"), add distance, scatter, breathe. An outburst is information: too close, too long.',
+        'Stop before your dog is tired. Eight minutes of this is a real workout.'],
+       win:'Auto check-ins are the goal behavior. Jackpot every single one.',
+       easier:'Return to last week’s distance for two more days.'},
+      {title:'Moving targets', goal:'Add motion — the hardest dial — on your terms.',
+       steps:[
+        'Parallel movement first: walk the same direction as a trigger, a street-width or field-width away. Moving together is easier than head-on.',
+        'Mark and feed check-ins on the move, every few steps at first.',
+        'Rehearse the U-turn with no trigger present: happy "this way!", turn, 3 steps, feed. Five smooth reps so it’s ready when you need it.',
+        'Head-on passes only where you can arc: curve around triggers like a banana, never a collision course.',
+        'One route length per session. Quit while you’re winning.'],
+       win:'A relaxed pass at 30 feet beats a tense one at 10. Pay the relaxed one.',
+       easier:'You stand still and let triggers move past at distance before you both move.'},
+      {title:'Real streets', goal:'Run the loop on normal walks with real surprises.',
+       steps:[
+        'Normal neighborhood walk at a quieter hour, treats loaded, plan in pocket.',
+        'Every sighting runs the loop: notice → mark → check-in → feed. Auto check-ins still earn jackpots.',
+        'Use the terrain: parked cars, driveways, and hedges are legal distance-makers. Crossing the street early is skilled handling, not avoidance.',
+        'One planned pass per walk at your current working distance; cheerfully manage everything else with arcs and U-turns.',
+        'Log outbursts without judgment. The trend is what matters — and yours is pointed down.'],
+       win:'Your handling choices — arcs, crossings, U-turns — count as wins. You’re driving now.',
+       easier:'Three more days of setup sessions at your predictable spot.'},
+      {title:'Your dog’s new normal', goal:'Check-in-and-carry-on becomes the default, for life.',
+       steps:[
+        'Full walks with the loop humming in the background: trigger appears, your dog checks in, you pay. It looks like magic; it’s five weeks of reps.',
+        'Thin the schedule: pay the hard ones — close, sudden, fast-moving — and praise the easy ones.',
+        'Keep the emergency kit sharp: rehearse the U-turn and the scatter once a month.',
+        'Window barkers: reopen the view gradually — blinds half up while you pay quiet watching. Calm watching earns; barking closes the view again.',
+        'Forever rule: after a hard day (vet, fireworks, a big scare), give 48 low-key hours before trigger practice. Stress stacks.'],
+       win:'Check in, carry on — reward your dog’s new default at least sometimes, forever.',
+       easier:'Hold the Week 5 structure another week. This behavior rewards patience like no other.'}
+    ]
+  },
+  counter: {
+    label:'Counter surfing', short:'Counter raids', icon:'🍗',
+    question:'How many counter-surfing attempts (paws up or food stolen) today?',
+    blurb:'One stolen sandwich pays for a month of surfing — the counter is a slot machine that keeps hitting. We close the casino and make the kitchen floor the better bet.',
+    prereq:'place',
+    weeks:[
+      {title:'Close the casino', goal:'Stop the payoffs cold and start paying the floor.',
+       steps:[
+        'Management starts today and is non-negotiable this week: nothing edible lives on the counter. Not a butter dish, not a crumb.',
+        'Put a mat at the edge of the kitchen — that’s your dog’s new office.',
+        'While you’re in the kitchen, mark and treat any four-on-the-floor moment near the counter. Feed on the floor, never from the counter.',
+        'Mat intro: toss a treat on, mark arrival, feed two more on the mat, release with "free!" Repeat 8 times.',
+        'Mix floor-pay and mat reps for the full session. The kitchen is becoming a place where the floor pays.'],
+       win:'Feed on the floor or the mat, never from counter height — the geography of the reward matters.',
+       easier:'Baby-gate the kitchen when you can’t supervise. Management is training.'},
+      {title:'Your spot while I cook', goal:'The mat becomes your dog’s job during kitchen time.',
+       steps:[
+        'Send your dog to the mat ("place"), then do 30 seconds of fake kitchen puttering — open a cupboard, move a pan.',
+        'Pay on the mat every few seconds at first. You’re a treat sprinkler with excellent aim.',
+        'Release with "free!" before your dog decides to leave. Ending on your cue keeps the mat strong.',
+        'If they drift toward the counter, no scolding — just reset to the mat cheerfully and make the next rep shorter.',
+        'Eight rounds: putter, pay, release. Boring kitchens make rich mats.'],
+       win:'Release before failure. A dozen short wins beat one long stay that breaks.',
+       easier:'Stand right next to the mat while you putter, and pay twice as often.'},
+      {title:'Real cooking, real duration', goal:'Hold the mat through actual food prep.',
+       steps:[
+        'Cook something real and low-stakes — toast, a sandwich. Dog on the mat.',
+        'Stretch the pay gaps: every 15–30 seconds now, tossed to the mat so you don’t leave your station.',
+        'Drop test: let a piece of carrot or kibble "accidentally" fall. If your dog holds the mat, jackpot 3 treats there. If not, calmly cover the food with your foot and reset — no payoff, no drama.',
+        'Release for a sniffy break halfway through, then re-send to the mat.',
+        'End the session by delivering a final payday on the mat as you plate up.'],
+       win:'The drop test is the exam — jackpot the dog who holds the mat when food hits the floor.',
+       easier:'Shorter prep, richer pay rate, and skip the drop test another week.'},
+      {title:'Temptation on the counter', goal:'Food returns to the counter — as a setup you control.',
+       steps:[
+        'Place something boring (dry bread, a plain cracker) at the back of the counter. Dog on the mat, you nearby.',
+        'Pay heavily for staying put: every 10 seconds while the temptation sits in view.',
+        'If your dog approaches the counter, cheerfully reset to the mat and move the food further back. Lower the difficulty; never raise your voice.',
+        'Practice walk-bys: you carry the plate across the kitchen while your dog holds the mat. Mark and pay mid-carry.',
+        'Three short rounds. Always end with the food put away and a jackpot on the mat.'],
+       win:'Choosing the mat over visible food is a big deal — pay it like the victory it is.',
+       easier:'Temptation goes back in a closed container on the counter, visible but sealed.'},
+      {title:'Raise the stakes', goal:'Tastier bait, brief distance — the counter still never pays.',
+       steps:[
+        'Upgrade the bait: a slice of cheese, a bit of chicken, pushed to the back of the counter.',
+        'Pay the mat on a variable schedule now — sometimes 10 seconds, sometimes 40. Unpredictable pay builds patience.',
+        'Take two steps out of the kitchen and come right back. Mat held? Jackpot. Build to 30 seconds just out of sight.',
+        'Any counter approach: reset, easier setup, and check yourself — did you stretch two dials at once?',
+        'Finish with real cooking and the mat routine from Week 3.'],
+       win:'A dog who holds the mat while you leave the room has genuinely changed their bet.',
+       easier:'Stay visible the whole time; distance can wait a week.'},
+      {title:'A kitchen you can trust', goal:'Real meals, light management, lifetime habits.',
+       steps:[
+        'Cook real meals with your dog loose in the kitchen. The mat stays available and occasionally pays — surprise paydays keep it competitive.',
+        'Keep the forever rule: food never lives unattended at the counter’s edge. Even trained dogs are still dogs.',
+        'Pay spontaneous good choices — your dog wanders in, glances at the counter, and settles on the mat unasked? Jackpot.',
+        'Guests and holidays are graduate school: re-run Week 4 setups before big cooking days.',
+        'Monthly tune-up: one drop-test session keeps the habit honest.'],
+       win:'Unasked-for mat choices are the finish line — reward them whenever you catch one.',
+       easier:'Keep the baby gate in play for chaotic cooking days. That’s wisdom, not weakness.'}
+    ]
+  },
+  mouthing: {
+    label:'Nipping & mouthing', short:'Nipping', icon:'🦷',
+    question:'How many times did teeth touch skin today?',
+    blurb:'Mouthing is how dogs play and explore — the goal isn’t to punish the mouth, it’s to teach it where to go. Teeth on toys: the game continues. Teeth on skin: the fun pauses.',
+    prereq:null,
+    weeks:[
+      {title:'Teeth off, toys on', goal:'Make a toy the default mouth destination.',
+       steps:[
+        'Stash soft toys in every room, within arm’s reach. Preparation beats reaction.',
+        'When play starts, the toy goes in the mouth first — offer it before teeth find skin.',
+        'Teeth touch skin? All fun pauses: stand up, fold your hands, count 10 boring seconds. Then re-offer the toy and resume. No yelping, no drama — just a payroll freeze.',
+        'Mark and reward any mouth choice that isn’t skin: licks, air snaps at the toy, grabbing the toy.',
+        'Map the witching hours (usually dusk) and schedule a nap before them. Overtired dogs bite more — sleep is a training tool.'],
+       win:'The pause must be instant and boring. Timing teaches; lectures don’t.',
+       easier:'Play with long toys (rope tugs, flirt pole) that keep hands far from teeth.'},
+      {title:'"Get your toy!"', goal:'Install a cue that redirects the mouth on request.',
+       steps:[
+        'Point at a toy and say "Get your toy!" in a fun voice. The moment your dog grabs it, mark and play — the game itself is the reward.',
+        'Ten reps across the day, different rooms, different toys.',
+        'Start using the cue preemptively: hands reaching for the collar, shoes going on, kids moving fast — "Get your toy!" first.',
+        'Reward carrying: a dog holding a toy is a dog not holding your wrist. Praise and play whenever they parade one around.',
+        'Keep the Week 1 pause rule running. The rules never change; the skills grow.'],
+       win:'Cue it before the nip, not after. Prevention is the technique.',
+       easier:'Use their single favorite toy only, and practice when they’re calm.'},
+      {title:'Hands are boring, calm pays', goal:'Teach that human touch predicts treats, not wrestling.',
+       steps:[
+        'Handling drills: touch the collar, feed a treat. Touch a paw, feed. Touch an ear, feed. Ten calm reps.',
+        'Pet with slow, long strokes — fast pats and rough play invite the mouth. Slow hands make calm dogs.',
+        'Run consent checks: pet for 3 seconds, stop, hands off. Dog leans in for more? Continue. Dog mouths? Fun pauses, 10 seconds.',
+        'Feed calm all day: quietly drop a treat when your dog is lying peacefully near you. Calm should be the best-paying job in the house.',
+        'Kids in the home practice the "be a tree" pose with you coaching — arms folded, still, boring.'],
+       win:'Slow touch plus treats rewires what hands mean. Pay heavy for calm acceptance.',
+       easier:'Shorter touches, better treats, and practice right after exercise.'},
+      {title:'The on-off switch', goal:'Build arousal control — the real cure for nippy play.',
+       steps:[
+        'Play tug hard for 20 seconds, then cue "drop" (trade for a treat) and ask for a sit or a settle.',
+        'The instant your dog settles, mark, feed calmly... then the game resumes! Calming down is what restarts the fun.',
+        'Repeat the cycle 5–6 times: big play, quick calm, play again. You’re installing an off-switch with a spring back to on.',
+        'If teeth find skin mid-game, the whole session ends for 60 seconds. High stakes make careful mouths.',
+        'End with a lick mat or snuffle box — licking and sniffing wind the nervous system down.'],
+       win:'Play resuming is the jackpot — calm has never paid this well.',
+       easier:'Shorter play bursts (10 seconds) and longer calm breaks.'},
+      {title:'Visitors and fast humans', goal:'Keep the trained mouth around exciting people.',
+       steps:[
+        'Recruit a visitor. Before they greet, cue "Get your toy!" — greeting with a toy in the mouth is the house ritual now.',
+        'Coach the visitor: slow hands, calm voice, pet only while the toy stays in or the mouth stays soft.',
+        'Any nip: the visitor stands and turns away for 10 seconds. Everyone follows the same rule — that’s what makes it law.',
+        'Practice around kids at a managed distance: dog on leash, toy in mouth, treats for calm watching.',
+        'Keep sessions short. Excitement plus fatigue is where nips live.'],
+       win:'The toy-in-mouth greeting ritual solves most of this — make it automatic.',
+       easier:'Calmer visitors first; save the energetic friends for next week.'},
+      {title:'A grown-up mouth', goal:'Soft-mouth habits proofed for life.',
+       steps:[
+        'Test gently: play, handling, excitement — teeth should now stay off skin or arrive velvet-soft. If not, rerun Week 4 for a few days; some dogs need extra reps and that’s fine.',
+        'Keep "Get your toy!" as a lifetime greeting ritual — for guests, for homecomings, for zoomies.',
+        'Maintain the settle: one on-off switch game a week keeps arousal control sharp.',
+        'Keep paying calm randomly, forever. A treat that falls from the sky onto a peacefully resting dog is the best money you’ll ever spend.',
+        'Teething puppy? Keep frozen chew options rotating — a sore mouth needs legal outlets.'],
+       win:'Soft mouth + off switch + toy ritual = a dog you can trust with grandma’s hands.',
+       easier:'There’s no rush. Hold any week as long as you need — the plan waits for the dog.'}
+    ]
+  },
+  door: {
+    label:'Door dashing', short:'Door dashing', icon:'🚀',
+    question:'How many door-dash attempts today?',
+    blurb:'An open door is a starting gun unless we teach otherwise. We’ll make waiting at thresholds pay so well that the open door becomes a cue to sit tight.',
+    prereq:'sit',
+    weeks:[
+      {title:'Doorways 101 (inside only)', goal:'Thresholds mean pause — starting where it’s easy.',
+       steps:[
+        'Interior doorway, dog on leash. Walk up to it and stop.',
+        'Wait for any pause or a sit — mark ("Yes!") and treat. You’re paying for hitting the brakes.',
+        'Add the cue "wait" as you stop at the threshold.',
+        'You step through first, then release with "okay!" and treat on the other side. The release is when crossing happens — never before.',
+        'If your dog surges ahead, no scolding: just don’t move forward. Reset one step back and try again. Ten doorways around the house.'],
+       win:'The release word does the work. Crossing happens on "okay!", every time.',
+       easier:'Start at the most boring doorway in the house — a closet beats the back door.'},
+      {title:'The front door, closed', goal:'Build the wait where it matters, with the door still shut.',
+       steps:[
+        'Leash on, walk to the front door, cue "wait," and reach for the handle. Dog holds? Mark, treat.',
+        'Jiggle the handle. Hold = pay. Move toward the door = hand comes off the handle, reset.',
+        'Turn the handle without opening. Same rules.',
+        'Knock on the door yourself or ring the bell. Waiting through the sound earns a jackpot — three treats, one at a time.',
+        'Ten reps. The handle and the bell are becoming cues to plant, not launch.'],
+       win:'The hand-off-the-handle reset is perfect information: surging makes the door stop working.',
+       easier:'Pay for a sit anywhere near the door before adding the handle.'},
+      {title:'One inch of open', goal:'The door actually opens — barely — and the wait holds.',
+       steps:[
+        'Leash on, "wait," crack the door one inch. Dog holds? Mark, treat, close the door.',
+        'Any surge: door closes instantly and calmly. The dog’s own choice operates the door.',
+        'Build the gap: two inches, six inches, halfway. Pay at each new level several times before widening.',
+        'Add duration: door half open, count 3 seconds, pay. Then 5, then 10.',
+        'Release through together on "okay!" for the final rep — the walk itself becomes the payday.'],
+       win:'The door is a slot machine that only pays a parked dog. Keep the odds perfect.',
+       easier:'Back to the handle stage for two days, then retry one inch.'},
+      {title:'Wide open world', goal:'A fully open door, real distractions on the far side.',
+       steps:[
+        'Leash on, "wait," door swings fully open. Hold for 3 seconds → mark, pay, close.',
+        'Build to 15–30 seconds of open-door waiting, paying every 5 seconds or so.',
+        'You step outside; your dog waits inside. Come back, pay generously. This is hard — pay like it.',
+        'Invite distractions: a family member walks past outside, a ball bounces on the path. Hold = jackpot.',
+        'Every session ends with a release and a real walk or yard sniff. Waiting is what starts adventures.'],
+       win:'You outside + dog waiting inside is the graduation exercise. Jackpot it.',
+       easier:'Half-open door and shorter counts. Build the seconds back up slowly.'},
+      {title:'Doorbells, guests, and chaos', goal:'The wait survives arrivals — the real test.',
+       steps:[
+        'Combine everything: doorbell rings, you cue "wait," open the door to a real person. Leash on as backup.',
+        'Your dog holds while you greet the guest for 5 seconds → mark, big pay.',
+        'Guest steps in; dog stays parked until "okay!" releases them to say hello (politely — a sit earns the greeting).',
+        'Every family member runs reps this week. A rule only one person enforces isn’t a rule.',
+        'Delivery knocks are free practice: no one’s even coming in.'],
+       win:'Arrivals are the strongest trigger — every calm rep here is worth ten easy ones.',
+       easier:'Rehearse with family "guests" before real visitors.'},
+      {title:'Trust at every threshold', goal:'Off-leash reliability and habits that hold for years.',
+       steps:[
+        'Drop the leash (inside). Run the full sequence: bell, wait, open, greet, release. The habit should hold without the hardware.',
+        'Car doors count: "wait" at the tailgate or back seat until released. Same rules, new threshold — this one saves lives in parking lots.',
+        'Randomize the pay: sometimes a treat, sometimes the release itself, sometimes praise. Keep them guessing, keep it strong.',
+        'The forever rule for every human in the house: the door only opens for a waiting dog.',
+        'Monthly fire drill: one session of surprise bells and open doors keeps the brakes fresh.'],
+       win:'The open door now means "hold" — protect that meaning with occasional paydays for life.',
+       easier:'Leash stays on for real arrivals another few weeks. Cheap insurance.'}
+    ]
+  },
+  recall: {
+    label:'Ignoring recall', short:'Ignored recalls', icon:'🌀',
+    question:'How many times did your dog blow off a "come" today?',
+    blurb:'A recall isn’t obedience — it’s a bet your dog places every time you call. We’re going to make coming to you the best bet on the field, every single time.',
+    prereq:null,
+    weeks:[
+      {title:'A brand-new magic word', goal:'Load a fresh cue with pure, uncomplicated value.',
+       steps:[
+        'Pick a new word — "here!" beats a worn-out "come." Old cues carry old baggage; new word, clean slate.',
+        'Charge it: say "here!" once, then feed 3 treats one at a time at your knees. Ten reps. No movement required yet — just word, then party.',
+        'Play the name game too: say their name, mark the head turn, treat. Fifteen fast reps.',
+        'House law starting now: never say the cue unless you’d bet $20 they’ll come. Every ignored cue makes the word weaker.',
+        'Second law: the recall is never followed by something your dog hates — no calling to end fun, start baths, or trim nails. Go collect them for those instead.'],
+       win:'Protect the word like a password. It only ever predicts great things.',
+       easier:'Charge the word during meals: "here!" then the food bowl lands.'},
+      {title:'Ping-pong and hallway sprints', goal:'Add motion and speed in easy territory.',
+       steps:[
+        'Two people, opposite ends of a hallway. Take turns: "here!" → dog sprints over → 3 treats at the knees → other person calls.',
+        'Solo version: toss a treat away, and as your dog finishes it, "here!" and run backward a few steps. Chasing you is half the fun — be worth chasing.',
+        'Add the collar touch: as you feed, gently hold the collar. Treat, release. A recall that ends in a grab must still feel great — this is your emergency insurance.',
+        'Ten recalls a session, every one a party. Boring paychecks kill recalls.',
+        'Sprinkle surprise recalls through the day: mid-nap-wakeup, from another room, during play.'],
+       win:'Feed at your knees, touch the collar, keep the party going 5 full seconds.',
+       easier:'Shorter distances and your dog’s all-time favorite food.'},
+      {title:'The long line', goal:'Take it outside with a safety net, not a leash of faith.',
+       steps:[
+        'Buy or make a 15–30 foot long line. Quiet field or empty park, line on, let it drag or hold the end loosely.',
+        'Let your dog drift off and sniff. Then: "here!" — if they whirl and come, jackpot 5 treats one at a time plus real praise.',
+        'If they hesitate, don’t repeat the cue: get exciting instead — crouch, clap, run backward. Coming to you must always work.',
+        'The magic move: after most recalls, say "go play!" and release them back to sniffing. Coming to you doesn’t end fun; it buys more fun.',
+        'Eight recalls, quit while they’re hot. Never call for the leash-up until the final one — and pay that one triple.'],
+       win:'The "go play!" release is the secret weapon. Recall = fun continues, always.',
+       easier:'A quieter field, a shorter line, and closer recalls.'},
+      {title:'The distraction gradient', goal:'Compete with the world — from a distance you can win.',
+       steps:[
+        'Long line on, set up at a distance from mild distractions: another dog playing 50 yards off, kids on a playground across the field.',
+        'Recall away from the distraction. Success = jackpot + "go play!" release back toward the fun (at the safe distance).',
+        'Missed one? No repeat, no scold. Walk closer, shorten the picture, win the next one. Then re-add distance.',
+        'Keep a 90% success rate by choosing your battles — you’re building a gambling addiction to the word "here!".',
+        'Two sessions this week in brand-new locations. New places, same paycheck.'],
+       win:'Being released back to the fun is the reward that beats squirrels. Use it constantly.',
+       easier:'More distance from distractions and richer jackpots.'},
+      {title:'Hide, seek, and hard mode', goal:'Make finding you a game your dog can’t stop playing.',
+       steps:[
+        'On the long line in a safe area, wait for a sniffy moment and quietly step behind a tree. Then: "here!"',
+        'The search-and-find lights dogs up — when they find you, throw a party worthy of the effort.',
+        'Busier parks now, still on the line: recalls past other dogs at a workable distance, past picnics, past joggers.',
+        'Recruit a friend with a calm dog as a living distraction: recall away from a real dog, then "go play!" release to greet politely.',
+        'Keep tallying honestly. Ignored recalls this week are data about distance and difficulty, not disobedience.'],
+       win:'The find-me game builds a dog who keeps half an eye on you always — that’s the real goal.',
+       easier:'Hide barely out of sight, or just crouch behind a bench. Easy finds first.'},
+      {title:'Trust, but verify', goal:'Earn off-line freedom and keep the word golden forever.',
+       steps:[
+        'Fenced or genuinely safe areas only: drop the line and run the same games with the line off.',
+        'Keep the ratios sacred: most recalls end in "go play!", the last one ends in a triple payday and the leash.',
+        'Intermittent jackpots forever: usually praise-and-release, sometimes a shocking windfall of chicken. Gamblers keep playing.',
+        'Monthly tune-up: one long-line session in a new place keeps the skill honest.',
+        'The lifetime rules never expire: never call for bad news, never repeat the cue, never bet the word on a fight you’ll lose.'],
+       win:'A recall is a bank account. You’ve made deposits for six weeks — keep depositing forever.',
+       easier:'Stay on the long line in open areas. Freedom can wait; trust can’t be rebuilt cheaply.'}
+    ]
+  }
+};
+
+/* ---------------------------------------------------------------- state */
+const KEY='pawplan.v1';
+let state=null;
+try{ state=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ state=null; }
+
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+function todayStr(d){ const x=d||new Date(); return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'); }
+function parseDate(s){ const p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+function dayIndex(dateStr){ // 1-based program day
+  return Math.round((parseDate(dateStr)-parseDate(state.startDate))/864e5)+1;
+}
+function dateOfDay(n){ const d=parseDate(state.startDate); d.setDate(d.getDate()+n-1); return todayStr(d); }
+function weekOf(n){ return Math.ceil(n/7); }
+function getCount(dateStr,beh){ const e=state.log[dateStr]; return e&&e.counts&&typeof e.counts[beh]==='number'?e.counts[beh]:null; }
+
+function weeklyStats(beh,w){ // avg per logged day for program week w
+  let sum=0,days=0;
+  for(let n=(w-1)*7+1;n<=w*7;n++){
+    const c=getCount(dateOfDay(n),beh);
+    if(c!==null){ sum+=c; days++; }
+  }
+  return days? {avg:sum/days,total:sum,days:days} : null;
+}
+
+/* Adaptive stage: advances weekly unless the just-finished week got >10% worse. */
+function stageFor(beh,week){
+  let stage=1;
+  for(let w=2;w<=week;w++){
+    if(w===2){ stage=Math.min(stage+1,6); continue; }
+    const cur=weeklyStats(beh,w-1), prev=weeklyStats(beh,w-2);
+    if(!cur||!prev||cur.days<3||prev.days<3){ stage=Math.min(stage+1,6); continue; }
+    const worse = prev.avg===0 ? cur.avg>0 : (cur.avg-prev.avg)/prev.avg>0.1;
+    if(!worse) stage=Math.min(stage+1,6);
+  }
+  return stage;
+}
+function stageHeld(beh,week){ return stageFor(beh,week)<Math.min(week,6); }
+
+function pctChange(beh,w){ // change of week w vs w-1; negative = fewer incidents
+  const cur=weeklyStats(beh,w), prev=weeklyStats(beh,w-1);
+  if(!cur||!prev) return null;
+  if(prev.avg===0) return cur.avg===0?0:null;
+  return Math.round((cur.avg-prev.avg)/prev.avg*100);
+}
+
+function ageNote(m){
+  if(m<5) return 'At '+m+' months you’ve got a baby brain on board: keep reps tiny, split the 10 minutes into two or three bursts, and let naps do half the work. Puppies learn fast and tire faster.';
+  if(m<=18) return 'At '+m+' months you’re training a teenager — brilliant one minute, feral the next. Regression days are normal and temporary. Lower the difficulty on wild days and keep the paychecks generous.';
+  if(m<=84) return 'An adult dog is a focused student — you’ll see steady, honest progress. Old habits have a rehearsal history, so expect the trend line to win over weeks, not days.';
+  return 'A senior student! Older dogs learn beautifully — keep sessions physically easy, surfaces non-slip, and treats soft. Wisdom plus chicken is an unbeatable combination.';
+}
+function breedNote(b){
+  const s=(b||'').toLowerCase();
+  if(/collie|shepherd|heeler|aussie|corgi|sheepdog|malinois|cattle/.test(s)) return 'Herding brain: give the eyes and brain a job or they’ll invent one. Sniff work after sessions is your pressure valve.';
+  if(/retriever|lab|golden|spaniel|poodle|doodle/.test(s)) return 'A biddable worker who lives for the game — your risk isn’t stubbornness, it’s over-excitement. Reward calm as much as action.';
+  if(/terrier|jack russell|bull|staffy|pit/.test(s)) return 'Terrier tenacity works for you once training IS the game. Keep sessions punchy and end before they choose their own adventure.';
+  if(/husky|malamute|shiba|akita|spitz/.test(s)) return 'An independent thinker — "what’s in it for me?" is a fair question. Answer it with premium pay and freedom-based rewards.';
+  if(/beagle|hound|dachshund|basset|coonhound/.test(s)) return 'That nose outranks you sometimes. Use sniffing as a reward, not an enemy, and train before meals when food value peaks.';
+  if(/chihuahua|pom|yorkie|maltese|papillon|toy|min pin/.test(s)) return 'Small dog, full-size brain. Train on the floor at their level, use rice-grain treats, and never let size excuse skipping reps.';
+  return 'Every dog is an individual — watch yours, adjust the dials, and trust the process.';
+}
+function warmupSkill(){
+  const pref=['touch','sit','down','recall','stay'];
+  const known=(state.profile.known||[]);
+  for(const p of pref){ if(known.includes(p)) return SKILLS.find(s=>s.id===p).label; }
+  return null;
+}
+
+/* ---------------------------------------------------------------- dom utils */
+function el(tag,attrs,children){
+  const n=document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    if(k==='text') n.textContent=attrs[k];
+    else if(k==='html') n.innerHTML=attrs[k]; /* trusted static template strings only */
+    else if(k.startsWith('on')) n.addEventListener(k.slice(2),attrs[k]);
+    else if(attrs[k]===false||attrs[k]==null) {}
+    else n.setAttribute(k,attrs[k]);
+  }
+  (children||[]).forEach(c=>{ if(c!=null) n.appendChild(typeof c==='string'?document.createTextNode(c):c); });
+  return n;
+}
+const SVGNS='http://www.w3.org/2000/svg';
+function sv(tag,attrs,children){
+  const n=document.createElementNS(SVGNS,tag);
+  if(attrs) for(const k in attrs){ if(k==='text') n.textContent=attrs[k]; else n.setAttribute(k,attrs[k]); }
+  (children||[]).forEach(c=>{ if(c!=null) n.appendChild(c); });
+  return n;
+}
+
+/* ---------------------------------------------------------------- tabs */
+const tabsNav=document.getElementById('tabs');
+tabsNav.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-tab]'); if(!b) return;
+  selectTab(b.dataset.tab);
+});
+function selectTab(id){
+  tabsNav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===id)));
+  ['today','plan','progress','setup'].forEach(t=>{ document.getElementById('tab-'+t).hidden=(t!==id); });
+}
+
+/* ---------------------------------------------------------------- render: today */
+function renderToday(){
+  const root=document.getElementById('tab-today'); root.textContent='';
+  if(!state){ root.appendChild(needSetupCard()); return; }
+  const today=todayStr(); const n=dayIndex(today);
+  if(n<1){ root.appendChild(el('div',{class:'card'},[el('h2',{text:'Your program starts soon'}),el('p',{class:'sub',text:'Day 1 kicks off on '+state.startDate+'. Stock up on pea-sized treats — you’ll need about 20 per session.'})])); return; }
+
+  const week=weekOf(n);
+  const probs=state.profile.problems;
+  const focusId=probs[(n-1)%probs.length];
+  const B=BEHAVIORS[focusId];
+  const graduated = n>42;
+  const stage=Math.min(stageFor(focusId,Math.min(week,6)),6);
+  const wk=B.weeks[stage-1];
+  const dayInWeek=((n-1)%7);
+  const arc=DAY_ARC[dayInWeek];
+  const held=stageHeld(focusId,Math.min(week,6));
+
+  // status line
+  root.appendChild(el('div',{class:'kicker',text: graduated? 'Maintenance mode · Day '+n : 'Week '+week+' of 6 · Day '+n+' of 42'}));
+
+  if(graduated){
+    root.appendChild(el('div',{class:'card'},[
+      el('h2',{text:'🎓 You did the six weeks. Now you maintain the win.'}),
+      el('p',{class:'sub',text:'Keep running 10-minute sessions a few times a week — today’s rotation is below. Random paydays, monthly tune-ups, and the forever rules from Week 6 keep everything you built.'})
+    ]));
+  }
+
+  // session card
+  const warm=warmupSkill();
+  const stageNote = held
+    ? el('div',{class:'note'},[el('b',{text:'Plan adapted: '}),'last week’s numbers for '+B.short.toLowerCase()+' didn’t drop, so we’re holding at Stage '+stage+' and running the easier variant. That’s smart training, not slow training. ',el('b',{text:'Easier version: '}),wk.easier])
+    : null;
+
+  const card=el('div',{class:'card'},[
+    el('h2',{text:'Today’s 10-minute session — '+B.icon+' '+B.label}),
+    el('p',{class:'sub',text:'Stage '+stage+': '+wk.title+' · '+wk.goal}),
+    el('span',{class:'daychip',text:arc.t}),
+    el('p',{class:'sub',style:'margin-top:0',text:arc.n}),
+    el('div',{class:'blocks'},[
+      el('div',{class:'block'},[
+        el('div',{class:'time',text:'0:00–2:00'}),
+        el('div',{},[
+          el('h4',{text:'Warm-up: rapid-fire wins'}),
+          el('p',{text: warm
+            ? 'Ten quick reps of '+warm+' — mark and pay every one. Easy money switches the learning brain on.'
+            : 'The name game: say your dog’s name, mark the head-turn, treat. Fifteen fast reps — easy money switches the learning brain on.'})
+        ])
+      ]),
+      el('div',{class:'block'},[
+        el('div',{class:'time',text:'2:00–8:00'}),
+        el('div',{},[
+          el('h4',{text:'The work: '+wk.title}),
+          el('ol',{class:'steps'}, sessionSteps(focusId,stage).map(s=>el('li',{text:s})))
+        ])
+      ]),
+      el('div',{class:'block'},[
+        el('div',{class:'time',text:'8:00–10:00'}),
+        el('div',{},[
+          el('h4',{text:'Wind down: end on a win'}),
+          el('p',{text:'Two or three easy reps of anything your dog nails, a jackpot for the last one, then a favorite game or a sniffy minute. Always leave them wanting more.'})
+        ])
+      ])
+    ]),
+    el('h3',{text:'Trainer’s note'}),
+    el('p',{class:'sub',style:'margin-bottom:8px',text:'💡 '+wk.win}),
+    stageNote,
+    (function(){ const done=state.log[today]&&state.log[today].done;
+      return el('button',{class:'bigbtn'+(done?' done':''),onclick:()=>{ ensureDay(today); state.log[today].done=!state.log[today].done; save(); renderAll(); },
+        text: done?'✓ Session done — great work today':'Mark today’s session done'});
+    })()
+  ]);
+  root.appendChild(card);
+
+  // tracker card
+  const tr=el('div',{class:'card'},[
+    el('h2',{text:'Tonight’s count'}),
+    el('p',{class:'sub',text:'Be honest — the plan adapts to real numbers, and a bad day is just a data point. Update this once, at the end of the day.'})
+  ]);
+  probs.forEach(id=>{
+    const b=BEHAVIORS[id];
+    const cur=getCount(today,id);
+    const out=el('output',{text:cur==null?'–':String(cur),'aria-live':'polite'});
+    const lbl=el('span',{text:cur==null?'Not logged yet today':'Logged'});
+    const set=v=>{ ensureDay(today); state.log[today].counts[id]=Math.max(0,v); save(); out.textContent=String(state.log[today].counts[id]); lbl.textContent='Logged'; };
+    tr.appendChild(el('div',{class:'trackrow'},[
+      el('div',{class:'q'},[el('b',{text:b.icon+' '+b.question}),lbl]),
+      el('div',{class:'stepper'},[
+        el('button',{'aria-label':'decrease '+b.short,onclick:()=>set((getCount(today,id)||0)-1),text:'−'}),
+        out,
+        el('button',{'aria-label':'increase '+b.short,onclick:()=>set((getCount(today,id)==null?0:getCount(today,id))+1),text:'+'})
+      ])
+    ]));
+  });
+  tr.appendChild(el('p',{class:'hint',text:'Zero is a number too — logging a clean day is how the app knows you’re winning.'}));
+  root.appendChild(tr);
+}
+function ensureDay(d){ if(!state.log[d]) state.log[d]={counts:{},done:false}; if(!state.log[d].counts) state.log[d].counts={}; }
+
+function sessionSteps(behId,stage){
+  const B=BEHAVIORS[behId];
+  let steps=B.weeks[stage-1].steps.slice();
+  if(stage===1&&B.prereq&&!(state.profile.known||[]).includes(B.prereq)){
+    const t=PREREQ_TEACH[B.prereq];
+    steps=['Foundation first — '+t.label+' isn’t on '+state.profile.name+'’s list yet, so start here: '+t.teach[0], ...t.teach.slice(1), 'Then move into today’s work: '+steps[0], ...steps.slice(1,4)];
+  }
+  return steps;
+}
+
+/* ---------------------------------------------------------------- render: plan */
+function renderPlan(){
+  const root=document.getElementById('tab-plan'); root.textContent='';
+  if(!state){ root.appendChild(needSetupCard()); return; }
+  const p=state.profile;
+  const n=Math.max(1,dayIndex(todayStr())); const week=Math.min(weekOf(n),6);
+
+  root.appendChild(el('div',{class:'card'},[
+    el('h2',{text:p.name+'’s 6-week program'}),
+    el('p',{class:'sub',text:'Ten minutes a day, rotating through your three target behaviors — each one climbing six progressive stages. Every Sunday the plan reads your tracker and adapts: behaviors that improved advance; behaviors that stalled hold their stage with an easier variant until the numbers move.'}),
+    el('div',{class:'note'},[
+      el('b',{text:'About '+p.name+': '}), ageNote(p.ageMonths)+' ',
+      el('b',{text:'Breed notes: '}), breedNote(p.breed)
+    ])
+  ]));
+
+  p.problems.forEach(id=>{
+    const B=BEHAVIORS[id];
+    const stage=stageFor(id,week);
+    const held=stageHeld(id,week);
+    const card=el('div',{class:'card'},[
+      el('h2',{text:B.icon+' '+B.label}),
+      el('p',{class:'sub',text:B.blurb}),
+      (B.prereq&&!(p.known||[]).includes(B.prereq))?
+        el('p',{class:'sub'},[el('span',{class:'pill acc',text:'Foundation included'}),' ',
+          'This protocol leans on "'+PREREQ_TEACH[B.prereq].label+'" — not on '+p.name+'’s list yet, so Stage 1 sessions teach it first. No extra work for you; it’s built in.']) : null,
+      held? el('p',{class:'sub'},[el('span',{class:'pill hold',text:'Adapted: holding Stage '+stage}),' ','Last week’s numbers didn’t drop, so the plan is repeating this stage with the easier variant before advancing.']) : null
+    ]);
+    B.weeks.forEach((w,i)=>{
+      const isCur=(i+1)===stage;
+      card.appendChild(el('details',{class:'week'+(isCur?' current':''),open:isCur||null},[
+        el('summary',{},[
+          el('span',{class:'wk',text:'Stage '+(i+1)}),
+          el('span',{text:w.title}),
+          isCur?el('span',{class:'pill acc',text:'This week'}):null
+        ]),
+        el('div',{class:'body'},[
+          el('p',{},[el('b',{text:'Goal: '}),w.goal]),
+          el('ol',{class:'steps'},w.steps.map(s=>el('li',{text:s}))),
+          el('p',{class:'win'},[el('b',{text:'What to reinforce: '}),w.win]),
+          el('p',{},[el('b',{text:'If it’s too hard: '}),w.easier])
+        ])
+      ]));
+    });
+    root.appendChild(card);
+  });
+}
+
+/* ---------------------------------------------------------------- render: progress */
+function renderProgress(){
+  const root=document.getElementById('tab-progress'); root.textContent='';
+  if(!state){ root.appendChild(needSetupCard()); return; }
+  const n=Math.max(1,dayIndex(todayStr()));
+  const week=weekOf(n);
+  const probs=state.profile.problems;
+
+  // KPIs
+  let done=0,logged=0;
+  for(let d=1;d<=Math.min(n,42);d++){ const e=state.log[dateOfDay(d)]; if(e&&e.done)done++; if(e&&e.counts&&Object.keys(e.counts).length)logged++; }
+  // streak: consecutive done days, forgiving a not-yet-done today
+  let streak=0; let dd=n; const eToday=state.log[dateOfDay(n)];
+  if(!(eToday&&eToday.done)) dd=n-1;
+  for(;dd>=1;dd--){ const e=state.log[dateOfDay(dd)]; if(e&&e.done)streak++; else break; }
+
+  let curTot=null,prevTot=null;
+  if(week>=1){ let c=0,p=0,cd=0,pd=0;
+    probs.forEach(id=>{ const cw=weeklyStats(id,Math.min(week,6)); const pw=weeklyStats(id,Math.min(week,6)-1); if(cw){c+=cw.avg;cd++;} if(pw){p+=pw.avg;pd++;} });
+    if(cd)curTot=c; if(pd)prevTot=p;
+  }
+  const kp=el('div',{class:'kpis'},[
+    tile('Sessions completed',done+' / 42', streak>1? streak+'-day streak 🔥':null,'flat'),
+    tile('Program week', Math.min(week,6)+' of 6', n>42?'Maintenance mode':DAY_ARC[(n-1)%7].t.split(' · ')[0],'flat'),
+    (function(){
+      if(curTot==null) return tile('Incidents / day (this week)','–','log a few days to see it','flat');
+      const d=prevTot!=null&&prevTot>0? Math.round((curTot-prevTot)/prevTot*100):null;
+      return tile('Incidents / day (this week)', curTot.toFixed(1),
+        d==null?'vs last week: –':(d<=0? '↓ '+Math.abs(d)+'% vs last week':'↑ '+d+'% vs last week'),
+        d==null?'flat':(d<=0?'good':'bad'));
+    })()
+  ]);
+  root.appendChild(kp);
+
+  // weekly report
+  const rw=Math.min(week,6)-1; // last completed program week
+  const rep=el('div',{class:'card report'},[el('h2',{text:'Week-over-week report'})]);
+  if(rw<1){
+    rep.appendChild(el('p',{class:'empty',text:'Your first trend report unlocks after Week 1 wraps. Until then: run the sessions, log the counts, trust the process. The data will tell the story.'}));
+  }else{
+    rep.appendChild(el('p',{class:'sub',text:'Week '+rw+' vs Week '+(rw-1>0?rw-1:'baseline')+' — and how next week adapts.'}));
+    probs.forEach(id=>{
+      const B=BEHAVIORS[id];
+      const pc=pctChange(id,rw);
+      const cur=weeklyStats(id,rw);
+      const stage=stageFor(id,Math.min(week,6));
+      const held=stageHeld(id,Math.min(week,6));
+      let head,cls,body;
+      if(pc==null||rw<2){
+        const base=cur?cur.avg.toFixed(1):'–';
+        head=B.short+': baseline set at '+base+'/day.'; cls='acc';
+        body='Numbers only mean something against last week — one more week of honest logging and the trends light up. '+B.weeks[stage-1].win;
+      }else if(pc<=-10){
+        head=B.short+' is down '+Math.abs(pc)+'% this week. 🎉'; cls='good';
+        body='That’s real change — here’s what to reinforce: '+B.weeks[Math.max(stage-2,0)].win+' Next week advances to Stage '+stage+': "'+B.weeks[stage-1].title+'".';
+      }else if(pc<10){
+        head=B.short+' is holding steady.'; cls='acc';
+        body='Plateaus are where habits set — keep the reps clean and the pay generous. What to reinforce: '+B.weeks[Math.max(stage-2,0)].win+' Next week moves to Stage '+stage+'.';
+      }else{
+        head=B.short+' is up '+pc+'% this week — we adapt.'; cls='hold';
+        body='No panic: rising numbers usually mean the difficulty outran the dog. The plan is holding at Stage '+stage+' and loading the easier variant: '+B.weeks[stage-1].easier+' Run that for a week and watch it turn.';
+      }
+      rep.appendChild(el('div',{class:'beh'},[
+        el('p',{class:'headline'},[el('span',{text:B.icon+' '+head}), el('span',{class:'pill '+cls,text: cls==='good'?'improving':cls==='hold'?'adapting':'on plan'})]),
+        el('p',{text:body})
+      ]));
+    });
+  }
+  root.appendChild(rep);
+
+  // charts per behavior
+  probs.forEach(id=>root.appendChild(behaviorChartCard(id,week)));
+}
+
+function tile(lbl,val,delta,cls){
+  return el('div',{class:'tile'},[
+    el('div',{class:'lbl',text:lbl}),
+    el('div',{class:'val',text:val}),
+    delta?el('div',{class:'delta '+cls,text:delta}):null
+  ]);
+}
+
+function behaviorChartCard(id,week){
+  const B=BEHAVIORS[id];
+  const wmax=Math.min(week,6);
+  const cur=weeklyStats(id,wmax), prev=weeklyStats(id,wmax-1);
+  const pc=(cur&&prev&&prev.avg>0)?Math.round((cur.avg-prev.avg)/prev.avg*100):null;
+
+  const card=el('div',{class:'card chartcard'},[
+    el('div',{class:'head'},[ el('h2',{text:B.icon+' '+B.short}), el('span',{class:'kicker',style:'margin:0',text:B.question}) ]),
+    el('div',{class:'statmini'},[
+      el('div',{},[
+        el('div',{class:'lbl',style:'font-size:13px;color:var(--ink-2)',text:'This week, per day'}),
+        el('div',{class:'val',text:cur?cur.avg.toFixed(1):'–'}),
+        el('div',{class:'delta '+(pc==null?'flat':pc<=0?'good':'bad'),text:pc==null?'vs last week: –':(pc<=0?'↓ '+Math.abs(pc)+'% vs last week':'↑ '+pc+'% vs last week')})
+      ]),
+      sparkline(id)
+    ])
+  ]);
+  card.appendChild(weeklyBars(id,wmax));
+  // table view
+  const tb=el('details',{class:'tbl'},[el('summary',{text:'View as table'})]);
+  const tbl=el('table',{},[
+    el('tr',{},[el('th',{text:'Week'}),el('th',{text:'Avg / day'}),el('th',{text:'Total'}),el('th',{text:'Days logged'})])
+  ]);
+  for(let w=1;w<=6;w++){ const s=weeklyStats(id,w);
+    tbl.appendChild(el('tr',{},[el('td',{text:'Week '+w}),el('td',{text:s?s.avg.toFixed(1):'–'}),el('td',{text:s?String(s.total):'–'}),el('td',{text:s?String(s.days):'–'})]));
+  }
+  tb.appendChild(el('div',{class:'tblscroll'},[tbl]));
+  card.appendChild(tb);
+  return card;
+}
+
+function sparkline(id){
+  // last 14 program days
+  const n=Math.max(1,dayIndex(todayStr()));
+  const from=Math.max(1,n-13);
+  const pts=[];
+  for(let d=from;d<=n;d++){ const c=getCount(dateOfDay(d),id); if(c!==null) pts.push({d:d,v:c}); }
+  const W=150,H=44,P=5;
+  const svg=sv('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,width:W,height:H,style:'max-width:150px','aria-label':'last 14 days trend'});
+  if(pts.length<2){ svg.appendChild(sv('text',{x:0,y:28,text:'log more days →'})); return svg; }
+  const vmax=Math.max(1,...pts.map(p=>p.v));
+  const x=d=>P+(d-from)/(Math.max(1,n-from))*(W-2*P);
+  const y=v=>H-P-(v/vmax)*(H-2*P);
+  let dd='';
+  pts.forEach((p,i)=>{ dd+=(i?'L':'M')+x(p.d).toFixed(1)+' '+y(p.v).toFixed(1)+' '; });
+  svg.appendChild(sv('path',{d:dd,fill:'none',stroke:'var(--baseline)','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'}));
+  // accent: last segment + end dot with surface ring
+  if(pts.length>=2){ const a=pts[pts.length-2],b=pts[pts.length-1];
+    svg.appendChild(sv('path',{d:'M'+x(a.d).toFixed(1)+' '+y(a.v).toFixed(1)+' L'+x(b.d).toFixed(1)+' '+y(b.v).toFixed(1),fill:'none',stroke:'var(--accent)','stroke-width':2,'stroke-linecap':'round'}));
+    svg.appendChild(sv('circle',{cx:x(b.d),cy:y(b.v),r:5.5,fill:'var(--card)'}));
+    svg.appendChild(sv('circle',{cx:x(b.d),cy:y(b.v),r:4,fill:'var(--accent)'}));
+  }
+  return svg;
+}
+
+function weeklyBars(id,wmax){
+  const W=560,H=190,L=34,R=10,T=16,BOT=26;
+  const wrap=el('div',{class:'chartwrap'});
+  const svg=sv('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,'aria-label':'weekly average incidents per day'});
+  const data=[]; for(let w=1;w<=6;w++){ const s=weeklyStats(id,w); data.push(s?+s.avg.toFixed(1):null); }
+  const vmax=Math.max(1,...data.filter(v=>v!=null));
+  const nice=vmax<=2?2:vmax<=5?5:Math.ceil(vmax/5)*5;
+  const iw=W-L-R, ih=H-T-BOT;
+  const y=v=>T+ih-(v/nice)*ih;
+  // gridlines + y ticks (0, half, max)
+  [0,nice/2,nice].forEach(v=>{
+    svg.appendChild(sv('line',{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke: v===0?'var(--baseline)':'var(--grid)','stroke-width':1}));
+    svg.appendChild(sv('text',{x:L-7,y:y(v)+4,'text-anchor':'end',class:'axis',text:String(v%1?v.toFixed(1):v)}));
+  });
+  const band=iw/6, bw=Math.min(24,band*0.5);
+  const tip=el('div',{class:'tip',role:'status'});
+  for(let i=0;i<6;i++){
+    const cx=L+band*i+band/2;
+    svg.appendChild(sv('text',{x:cx,y:H-8,'text-anchor':'middle',text:'W'+(i+1)}));
+    if(data[i]==null) continue;
+    const v=data[i], yt=y(v), h=Math.max(0,T+ih-yt);
+    const r=Math.min(4,h);
+    // rounded top, square baseline
+    const path='M'+(cx-bw/2)+' '+(T+ih)+' V'+(yt+r)+' Q'+(cx-bw/2)+' '+yt+' '+(cx-bw/2+r)+' '+yt+' H'+(cx+bw/2-r)+' Q'+(cx+bw/2)+' '+yt+' '+(cx+bw/2)+' '+(yt+r)+' V'+(T+ih)+' Z';
+    const bar=sv('path',{d:path,fill:'var(--accent)',tabindex:0,role:'img','aria-label':'Week '+(i+1)+': '+v+' per day'});
+    // cap label
+    svg.appendChild(sv('text',{x:cx,y:yt-6,'text-anchor':'middle',class:'caplbl',text:String(v)}));
+    // hover/focus
+    const show=()=>{ const s=weeklyStats(id,i+1);
+      tip.textContent=''; tip.appendChild(el('b',{text:v+' / day'})); tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Week '+(i+1)+' · '+s.total+' total over '+s.days+' logged day'+(s.days===1?'':'s')));
+      const bb=svg.getBoundingClientRect();
+      tip.style.left=(cx/W*bb.width)+'px'; tip.style.top=((yt-10)/H*bb.height)+'px'; tip.style.opacity='1';
+      bar.setAttribute('fill','var(--accent-ink)');
+    };
+    const hide=()=>{ tip.style.opacity='0'; bar.setAttribute('fill','var(--accent)'); };
+    bar.addEventListener('pointerenter',show); bar.addEventListener('pointerleave',hide);
+    bar.addEventListener('focus',show); bar.addEventListener('blur',hide);
+    // big hit area
+    const hit=sv('rect',{x:L+band*i,y:T,width:band,height:ih,fill:'transparent'});
+    hit.addEventListener('pointerenter',show); hit.addEventListener('pointerleave',hide);
+    svg.appendChild(hit);
+    svg.appendChild(bar);
+  }
+  wrap.appendChild(svg); wrap.appendChild(tip);
+  return wrap;
+}
+
+/* ---------------------------------------------------------------- render: setup */
+function renderSetup(){
+  const root=document.getElementById('tab-setup'); root.textContent='';
+  const p=state?state.profile:{name:'',breed:'',ageMonths:'',known:[],problems:[]};
+  let known=new Set(p.known||[]); let problems=[...(p.problems||[])];
+
+  const card=el('div',{class:'card'},[
+    el('h2',{text:state?'Update the profile':'Tell me about your dog'}),
+    el('p',{class:'sub',text:'Thirty seconds of setup, and I’ll build a six-week program shaped to your dog’s age, skills, and your three biggest headaches.'})
+  ]);
+
+  const nameIn=el('input',{type:'text',id:'f-name',value:p.name||'',placeholder:'Scout',autocomplete:'off'});
+  const breedIn=el('input',{type:'text',id:'f-breed',value:p.breed||'',placeholder:'Golden Retriever, mixed breed, best guess…',list:'breeds',autocomplete:'off'});
+  const ageIn=el('input',{type:'number',id:'f-age',min:'2',max:'240',value:p.ageMonths||'',placeholder:'10'});
+  card.appendChild(el('div',{class:'field'},[el('label',{for:'f-name',text:'Dog’s name'}),nameIn]));
+  card.appendChild(el('div',{class:'field'},[el('label',{for:'f-breed',text:'Breed (or your best guess)'}),breedIn,
+    el('datalist',{id:'breeds'},['Labrador Retriever','Golden Retriever','German Shepherd','French Bulldog','Poodle','Goldendoodle','Border Collie','Australian Shepherd','Beagle','Dachshund','Husky','Chihuahua','Jack Russell Terrier','Pit Bull / Staffy','Corgi','Shiba Inu','Mixed breed'].map(b=>el('option',{value:b})))]));
+  card.appendChild(el('div',{class:'field'},[el('label',{for:'f-age',text:'Age in months'}),ageIn]));
+
+  const knownWrap=el('div',{class:'chips'});
+  SKILLS.forEach(s=>{
+    const b=el('button',{type:'button','aria-pressed':String(known.has(s.id)),text:s.label,onclick:()=>{ known.has(s.id)?known.delete(s.id):known.add(s.id); b.setAttribute('aria-pressed',String(known.has(s.id))); }});
+    knownWrap.appendChild(b);
+  });
+  card.appendChild(el('div',{class:'field'},[el('label',{text:'What can your dog already do reliably?'}),knownWrap,el('p',{class:'hint',text:'Only count it if it works with mild distractions. Be stingy — the plan fills gaps automatically.'})]));
+
+  const probWrap=el('div',{class:'chips'}); const probHint=el('p',{class:'hint'});
+  const syncProb=()=>{ probWrap.querySelectorAll('button').forEach(b=>{
+      const on=problems.includes(b.dataset.id);
+      b.setAttribute('aria-pressed',String(on));
+    });
+    probHint.textContent=problems.length===3?'Locked and loaded: '+problems.map(i=>BEHAVIORS[i].short).join(', ')+'.':'Pick your top three ('+problems.length+'/3). The program rotates one per day.';
+  };
+  Object.keys(BEHAVIORS).forEach(id=>{
+    const b=el('button',{type:'button','data-id':id,text:BEHAVIORS[id].icon+' '+BEHAVIORS[id].label,onclick:()=>{
+      if(problems.includes(id)) problems=problems.filter(x=>x!==id);
+      else{ if(problems.length>=3) problems.shift(); problems.push(id); }
+      syncProb();
+    }});
+    probWrap.appendChild(b);
+  });
+  card.appendChild(el('div',{class:'field'},[el('label',{text:'Top three problem behaviors to fix'}),probWrap,probHint]));
+  syncProb();
+
+  const err=el('p',{class:'hint',style:'color:var(--bad)'});
+  card.appendChild(err);
+  card.appendChild(el('button',{class:'bigbtn',onclick:()=>{
+    const name=nameIn.value.trim(), breed=breedIn.value.trim(), age=parseInt(ageIn.value,10);
+    if(!name){err.textContent='Give me a name — every good dog has one.';return;}
+    if(!age||age<2){err.textContent='Age in months, 2 or more — it shapes the whole plan.';return;}
+    if(problems.length!==3){err.textContent='Pick exactly three problem behaviors. Ruthless prioritization wins.';return;}
+    const fresh=!state;
+    state=state||{log:{},startDate:todayStr()};
+    state.profile={name:name,breed:breed||'mixed breed',ageMonths:age,known:[...known],problems:problems};
+    if(!state.startDate) state.startDate=todayStr();
+    save(); renderAll(); if(fresh) selectTab('today');
+  },text: state?'Save changes':'Build my 6-week program'}));
+
+  root.appendChild(card);
+
+  const util=el('div',{class:'card'},[
+    el('h2',{text:'Utilities'}),
+    el('div',{class:'setuprow'},[
+      el('button',{class:'ghostbtn',onclick:loadDemo,text:'Load demo dog (3 weeks of data)'}),
+      state?el('button',{class:'ghostbtn',onclick:()=>{ if(confirm('Erase the profile and all tracking data? This can’t be undone.')){ state=null; localStorage.removeItem(KEY); renderAll(); selectTab('setup'); } },text:'Reset everything'}):null
+    ]),
+    el('p',{class:'hint',text:'Everything lives in your browser’s local storage — no accounts, no cloud, no judgment.'})
+  ]);
+  root.appendChild(util);
+}
+
+function needSetupCard(){
+  return el('div',{class:'card'},[
+    el('h2',{text:'Let’s meet your dog first'}),
+    el('p',{class:'sub',text:'Head to Setup, tell me who I’m working with, and I’ll build the program. Or load the demo dog to poke around.'}),
+    el('div',{class:'setuprow'},[
+      el('button',{class:'ghostbtn',onclick:()=>selectTab('setup'),text:'Go to Setup'}),
+      el('button',{class:'ghostbtn',onclick:loadDemo,text:'Load demo dog'})
+    ])
+  ]);
+}
+
+function loadDemo(){
+  const start=new Date(); start.setDate(start.getDate()-23);
+  state={ profile:{name:'Scout',breed:'Golden Retriever',ageMonths:10,known:['sit','down'],problems:['jumping','leash','barking']},
+    startDate:todayStr(start), log:{} };
+  for(let d=1;d<=23;d++){
+    const w=Math.ceil(d/7);
+    const jump=Math.max(0,Math.round(8-(d*0.28)+Math.sin(d*2.1)*1.4));
+    const leash=Math.max(0,Math.round(12-(d*0.14)+Math.sin(d*1.3)*1.6));
+    const bark=Math.max(0,Math.round( w<3? 6-(d*0.1)+Math.sin(d*1.7)*1.2 : 6+Math.sin(d*1.7)*1.5 ));
+    state.log[dateOfDay(d)]={counts:{jumping:jump,leash:leash,barking:bark},done:(d%8!==0)};
+  }
+  save(); renderAll(); selectTab('progress');
+}
+
+/* ---------------------------------------------------------------- boot */
+function renderChip(){
+  const chip=document.getElementById('dogChip');
+  if(!state){ chip.hidden=true; document.getElementById('appTitle').textContent='Six weeks to a better-behaved dog'; return; }
+  chip.hidden=false;
+  document.getElementById('chipName').textContent=state.profile.name;
+  document.getElementById('chipMeta').textContent=state.profile.breed+' · '+state.profile.ageMonths+' mo';
+  document.getElementById('appTitle').textContent=state.profile.name+'’s training program';
+}
+function renderAll(){ renderChip(); renderToday(); renderPlan(); renderProgress(); renderSetup(); }
+renderAll();
+if(location.hash.indexOf('#demo')===0){ loadDemo(); const t=location.hash.split('-')[1]; if(t) selectTab(t); }
+</script>
+<!--/ARTIFACT-->
+</body>
+</html>
