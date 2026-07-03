@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IronPlan — your progressive strength program</title>
+</head>
+<body>
+<!--ARTIFACT-->
+<style>
+:root{
+  --page:#f9f9f7; --card:#fcfcfb; --card-2:#f1f1ed;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-wash:rgba(42,120,214,.09);
+  --grid:#e1e0d9; --baseline:#c3c2b7; --hairline:rgba(11,11,11,.10);
+  --good:#006300; --bad:#b32d2d; --hold:#8a5a00; --hold-wash:rgba(250,178,25,.14);
+  --good-wash:rgba(12,163,12,.10); --bad-wash:rgba(208,59,59,.10);
+  --series:#2a78d6; --series-dim:#9ec5f4;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 4px 14px rgba(11,11,11,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page:#0d0d0d; --card:#1a1a19; --card-2:#242422;
+    --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --accent:#3987e5; --accent-ink:#6da7ec; --accent-wash:rgba(57,135,229,.14);
+    --grid:#2c2c2a; --baseline:#383835; --hairline:rgba(255,255,255,.10);
+    --good:#0ca30c; --bad:#e66767; --hold:#e3a63a; --hold-wash:rgba(250,178,25,.12);
+    --good-wash:rgba(12,163,12,.14); --bad-wash:rgba(230,103,103,.12);
+    --series:#3987e5; --series-dim:#1c5cab;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0d0d0d; --card:#1a1a19; --card-2:#242422;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --accent:#3987e5; --accent-ink:#6da7ec; --accent-wash:rgba(57,135,229,.14);
+  --grid:#2c2c2a; --baseline:#383835; --hairline:rgba(255,255,255,.10);
+  --good:#0ca30c; --bad:#e66767; --hold:#e3a63a; --hold-wash:rgba(250,178,25,.12);
+  --good-wash:rgba(12,163,12,.14); --bad-wash:rgba(230,103,103,.12);
+  --series:#3987e5; --series-dim:#1c5cab;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+}
+:root[data-theme="light"]{
+  --page:#f9f9f7; --card:#fcfcfb; --card-2:#f1f1ed;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-wash:rgba(42,120,214,.09);
+  --grid:#e1e0d9; --baseline:#c3c2b7; --hairline:rgba(11,11,11,.10);
+  --good:#006300; --bad:#b32d2d; --hold:#8a5a00; --hold-wash:rgba(250,178,25,.14);
+  --good-wash:rgba(12,163,12,.10); --bad-wash:rgba(208,59,59,.10);
+  --series:#2a78d6; --series-dim:#9ec5f4;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 4px 14px rgba(11,11,11,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--page); color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:24px 20px 80px}
+a{color:var(--accent-ink)}
+button{font:inherit;color:inherit;cursor:pointer}
+:is(button,input,select,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+[hidden]{display:none !important}
+
+/* header */
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:2px 0 4px;text-wrap:balance}
+.tagline{color:var(--ink-2);margin:0;font-size:15px}
+.mast-right{display:flex;align-items:center;gap:10px}
+.chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--hairline);border-radius:999px;padding:7px 16px 7px 8px;box-shadow:var(--shadow)}
+.chip .ava{width:34px;height:34px;border-radius:50%;background:var(--accent-wash);display:grid;place-items:center;font-size:17px}
+.chip b{font-size:14px;display:block;line-height:1.2}
+.chip span{font-size:12px;color:var(--ink-2)}
+.themebtn{background:var(--card);border:1px solid var(--hairline);border-radius:999px;width:38px;height:38px;display:grid;place-items:center;font-size:16px;box-shadow:var(--shadow)}
+
+/* tabs */
+nav.tabs{display:flex;gap:4px;margin:20px 0 24px;border-bottom:1px solid var(--hairline);flex-wrap:wrap}
+nav.tabs button{background:none;border:none;padding:10px 14px;font-weight:600;font-size:15px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:6px 6px 0 0}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover:not(:disabled){color:var(--ink);background:var(--accent-wash)}
+nav.tabs button:disabled{opacity:.4;cursor:not-allowed}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--hairline);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 4px}
+.card .sub{color:var(--ink-2);font-size:14px;margin:0 0 14px}
+.card h3{font-size:15px;font-weight:700;margin:18px 0 8px}
+.note{font-size:13px;color:var(--ink-3)}
+
+/* buttons */
+.btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 20px;font-weight:700;font-size:15px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card-2);color:var(--ink)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--hairline)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* setup form */
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 18px;margin:14px 0}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:5px}
+.field input,.field select{width:100%;background:var(--card-2);border:1px solid var(--hairline);border-radius:9px;padding:9px 12px;font:inherit;color:var(--ink)}
+.startgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:10px 0 4px}
+.seg{display:flex;background:var(--card-2);border:1px solid var(--hairline);border-radius:9px;padding:3px;gap:3px}
+.seg button{flex:1;border:none;background:none;border-radius:7px;padding:7px 4px;font-weight:600;font-size:14px;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+
+/* today: exercise blocks */
+.exblock{border:1px solid var(--hairline);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--card)}
+.exhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.exhead b{font-size:16px}
+.exhead .scheme{color:var(--ink-2);font-size:14px}
+.warmups{font-size:13px;color:var(--ink-3);margin:6px 0 10px}
+.warmups b{color:var(--ink-2);font-weight:600}
+.plates{font-size:13px;color:var(--ink-3);margin-top:8px}
+.setrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.setbtn{width:54px;height:54px;border-radius:50%;border:2px solid var(--baseline);background:var(--card-2);font-size:18px;font-weight:700;color:var(--ink-3)}
+.setbtn.logged{border-color:var(--accent);background:var(--accent);color:#fff}
+.setbtn.short{border-color:var(--hold);background:var(--hold-wash);color:var(--hold)}
+.sethint{font-size:12px;color:var(--ink-3)}
+.donebanner{display:flex;align-items:center;gap:12px;background:var(--good-wash);border:1px solid var(--hairline);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.donebanner .big{font-size:22px}
+
+/* program preview */
+.weekcard{border:1px solid var(--hairline);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.weekcard h4{margin:0 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-ink)}
+.sessline{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--hairline);font-size:14px;flex-wrap:wrap}
+.sessline:first-of-type{border-top:none}
+.sessline .sname{font-weight:700;min-width:96px}
+.sessline .lifts{color:var(--ink-2)}
+.sessline.done-line{opacity:.55}
+.rulelist{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--ink-2)}
+.rulelist li{margin-bottom:6px}
+
+/* stat tiles */
+.kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:18px}
+.tile{background:var(--card);border:1px solid var(--hairline);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.tile .tlabel{font-size:13px;color:var(--ink-2);font-weight:600}
+.tile .tvalue{font-size:28px;font-weight:650;letter-spacing:-.01em;margin:2px 0 0}
+.tile .tsub{font-size:12px;color:var(--ink-3);margin-top:2px}
+.tile .tsub .up{color:var(--good);font-weight:600}
+.tile svg{display:block;margin-top:6px}
+
+/* lift cards & charts */
+.liftcard .lifthead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.liftcard .lifthead h3{margin:0;font-size:16px}
+.statustag{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+.statustag.ok{background:var(--good-wash);color:var(--good)}
+.statustag.hold{background:var(--hold-wash);color:var(--hold)}
+.statustag.deload{background:var(--bad-wash);color:var(--bad)}
+.e1row{display:flex;align-items:baseline;gap:10px;margin:2px 0 6px;flex-wrap:wrap}
+.e1row .big{font-size:26px;font-weight:650;letter-spacing:-.01em}
+.e1row .delta{font-size:13px;font-weight:600}
+.e1row .delta.up{color:var(--good)}
+.e1row .delta.down{color:var(--bad)}
+.e1row .meta{font-size:13px;color:var(--ink-3)}
+.chartbox{position:relative;margin-top:6px}
+.chartbox svg{display:block;width:100%;height:auto}
+svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--ink-3);font-variant-numeric:tabular-nums}
+.tooltip{position:fixed;z-index:30;pointer-events:none;background:var(--card);border:1px solid var(--hairline);border-radius:9px;box-shadow:var(--shadow);padding:8px 11px;font-size:13px;max-width:240px}
+.tooltip .tt-date{color:var(--ink-3);font-size:12px;margin-bottom:2px}
+.tooltip .tt-val{font-weight:700;font-size:15px}
+.tooltip .tt-row{color:var(--ink-2)}
+
+/* history table */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600;padding:7px 12px 7px 0;border-bottom:1px solid var(--hairline);white-space:nowrap}
+td{padding:7px 12px 7px 0;border-bottom:1px solid var(--hairline);vertical-align:top;font-variant-numeric:tabular-nums}
+td .miss{color:var(--hold);font-weight:600}
+td .pr{color:var(--good);font-weight:700;font-size:11px;letter-spacing:.04em}
+
+.empty{padding:26px;text-align:center;color:var(--ink-3);font-size:15px}
+footer{margin-top:36px;font-size:13px;color:var(--ink-3);text-align:center}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">IronPlan</div>
+      <h1 id="appTitle">Get strong in three lifts-a-day</h1>
+      <p class="tagline">A progressive barbell program that adds weight when you win and backs off when you stall.</p>
+    </div>
+    <div class="mast-right">
+      <div class="chip" id="userChip" hidden>
+        <div class="ava">🏋️</div>
+        <div><b id="chipName"></b><span id="chipMeta"></span></div>
+      </div>
+      <button class="themebtn" id="themeBtn" title="Toggle theme" aria-label="Toggle color theme">◐</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-today" aria-selected="true" data-tab="today">Today</button>
+    <button role="tab" id="tab-program" aria-selected="false" data-tab="program">Program</button>
+    <button role="tab" id="tab-progress" aria-selected="false" data-tab="progress">Progress</button>
+    <button role="tab" id="tab-setup" aria-selected="false" data-tab="setup">Setup</button>
+  </nav>
+
+  <section id="panel-today" role="tabpanel" aria-labelledby="tab-today"></section>
+  <section id="panel-program" role="tabpanel" aria-labelledby="tab-program" hidden></section>
+  <section id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
+  <section id="panel-setup" role="tabpanel" aria-labelledby="tab-setup" hidden></section>
+
+  <footer>All data stays in your browser’s local storage. Nothing is uploaded anywhere.</footer>
+</div>
+<div class="tooltip" id="tooltip" hidden></div>
+
+<script>
+'use strict';
+/* ---------------------------------------------------------------- constants */
+const KEY='ironplan-v1';
+const LIFT_ORDER=['sq','bp','dl','ohp','row'];
+const LIFTS={
+  sq:{name:'Squat',short:'Squat'},
+  bp:{name:'Bench press',short:'Bench'},
+  dl:{name:'Deadlift',short:'Deadlift'},
+  ohp:{name:'Overhead press',short:'Press'},
+  row:{name:'Barbell row',short:'Row'}
+};
+const INC={lb:{sq:5,bp:5,dl:10,ohp:5,row:5}, kg:{sq:2.5,bp:2.5,dl:5,ohp:2.5,row:2.5}};
+const BAR={lb:45,kg:20};
+const STEP={lb:5,kg:2.5};
+const PLATES={lb:[45,35,25,10,5,2.5], kg:[25,20,15,10,5,2.5,1.25]};
+const DEFAULT_START={lb:{sq:95,bp:65,dl:135,ohp:45,row:65}, kg:{sq:40,bp:30,dl:60,ohp:20,row:30}};
+const TPL={
+  3:[{id:'A',name:'Workout A',items:[['sq',3,5],['bp',3,5],['row',3,5]]},
+     {id:'B',name:'Workout B',items:[['sq',3,5],['ohp',3,5],['dl',1,5]]}],
+  4:[{id:'UA',name:'Upper A',items:[['bp',3,5],['row',3,5],['ohp',2,8]]},
+     {id:'LA',name:'Lower A',items:[['sq',3,5],['dl',1,5]]},
+     {id:'UB',name:'Upper B',items:[['ohp',3,5],['row',3,5],['bp',2,8]]},
+     {id:'LB',name:'Lower B',items:[['sq',3,5],['dl',1,5]]}]
+};
+
+/* ---------------------------------------------------------------- state */
+let state=null;   // {profile:{name,unit,days,start:{}}, lifts:{sq:{w,fails,deloads}}, sessions:[...]}
+let cur=null;     // in-memory reps for the session being logged: [[reps|null,...], ...]
+function load(){ try{ state=JSON.parse(localStorage.getItem(KEY)); }catch(e){ state=null; } }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+/* ---------------------------------------------------------------- helpers */
+const $=id=>document.getElementById(id);
+function h(tag,attrs,...kids){
+  const el=document.createElement(tag);
+  for(const k in (attrs||{})){
+    if(k==='class') el.className=attrs[k];
+    else if(k.startsWith('on')) el.addEventListener(k.slice(2),attrs[k]);
+    else if(attrs[k]!==null && attrs[k]!==undefined) el.setAttribute(k,attrs[k]);
+  }
+  for(const kid of kids){
+    if(kid===null||kid===undefined) continue;
+    el.append(kid.nodeType?kid:document.createTextNode(kid));
+  }
+  return el;
+}
+const SVGNS='http://www.w3.org/2000/svg';
+function s(tag,attrs,...kids){
+  const el=document.createElementNS(SVGNS,tag);
+  for(const k in (attrs||{})) el.setAttribute(k,attrs[k]);
+  for(const kid of kids){ if(kid!==null&&kid!==undefined) el.append(kid.nodeType?kid:document.createTextNode(kid)); }
+  return el;
+}
+function todayStr(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseDate(str){ const [y,m,d]=str.split('-').map(Number); return new Date(y,m-1,d); }
+function fmtDate(str){ return parseDate(str).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function mondayOf(str){ const d=parseDate(str); const off=(d.getDay()+6)%7; d.setDate(d.getDate()-off); return todayStr(d); }
+function roundW(w,unit){ const st=STEP[unit]; return Math.max(BAR[unit], Math.round(w/st)*st); }
+function fmtW(w,unit){ return (w%1===0?w:w.toFixed(1))+' '+unit; }
+function compact(n){
+  if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M';
+  if(n>=1e4) return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';
+  return Math.round(n).toLocaleString();
+}
+function e1rm(w,reps){ return reps>0 ? w*(1+reps/30) : 0; }
+function bestE1rm(entry){
+  let best=0;
+  for(const r of entry.reps) best=Math.max(best, e1rm(entry.weight, r||0));
+  return best;
+}
+function tplFor(i){ const list=TPL[state.profile.days]; return list[i%list.length]; }
+function entrySuccess(en){ return en.reps.every((r,ix)=>(r||0)>=en.target[ix]); }
+
+/* warm-up scheme: bar ×5, then 40/60/80% ramp (deduped, above bar) */
+function warmups(w,unit){
+  const bar=BAR[unit], out=[{w:bar,reps:5,label:'empty bar'}];
+  const ramp=[[.4,5],[.6,3],[.8,2]];
+  for(const [pct,reps] of ramp){
+    const ww=roundW(w*pct,unit);
+    if(ww>bar && ww<w && ww>out[out.length-1].w) out.push({w:ww,reps});
+  }
+  return w<=bar? [] : out;
+}
+function plateText(w,unit){
+  const bar=BAR[unit];
+  if(w<bar)  return 'below bar weight — use dumbbells or a lighter bar';
+  if(w===bar) return 'empty bar';
+  let side=(w-bar)/2, out=[];
+  for(const p of PLATES[unit]){
+    let c=0; while(side>=p-1e-9){ side-=p; c++; }
+    if(c) out.push(c>1? c+'×'+p : String(p));
+  }
+  return out.length? out.join(' + ')+' per side' : 'empty bar';
+}
+
+/* ---------------------------------------------------------------- progression engine */
+function makeLiftState(start){ const o={}; for(const l of LIFT_ORDER) o[l]={w:start[l],fails:0,deloads:0,lastDeload:-1}; return o; }
+function applySession(lifts,session,unit){
+  for(const en of session.entries){
+    const L=lifts[en.lift];
+    if(entrySuccess(en)){ L.w=roundW(L.w+INC[unit][en.lift],unit); L.fails=0; }
+    else{
+      L.fails++;
+      if(L.fails>=3){ L.w=roundW(L.w*0.9,unit); L.fails=0; L.deloads++; L.lastDeload=session.i; }
+    }
+  }
+}
+function buildSession(i,lifts){
+  const t=tplFor(i);
+  return { i, tpl:t.id, name:t.name, date:null,
+    entries:t.items.map(([lift,sets,reps])=>({lift,weight:lifts[lift].w,target:Array(sets).fill(reps),reps:Array(sets).fill(null)})) };
+}
+/* project the next n sessions assuming every set succeeds */
+function projectSessions(n){
+  const sim=JSON.parse(JSON.stringify(state.lifts)), out=[];
+  for(let k=0;k<n;k++){
+    const i=state.sessions.length+k, sess=buildSession(i,sim);
+    out.push(sess);
+    for(const en of sess.entries) en.reps=en.target.slice();
+    applySession(sim,sess,state.profile.unit);
+  }
+  return out;
+}
+
+/* ---------------------------------------------------------------- derived stats */
+function liftHistory(lift){
+  const out=[];
+  for(const sess of state.sessions){
+    for(const en of sess.entries) if(en.lift===lift){
+      const bestIx=en.reps.reduce((b,r,ix)=>((r||0)*en.weight>(en.reps[b]||0)*en.weight? ix:b),0);
+      out.push({date:sess.date, i:sess.i, w:en.weight, e1:bestE1rm(en),
+                topReps:Math.max(...en.reps.map(r=>r||0)), success:entrySuccess(en)});
+    }
+  }
+  return out;
+}
+function weeklyVolume(){
+  const map=new Map();
+  for(const sess of state.sessions){
+    const wk=mondayOf(sess.date);
+    if(!map.has(wk)) map.set(wk,{week:wk,vol:0,sessions:0});
+    const rec=map.get(wk); rec.sessions++;
+    for(const en of sess.entries) for(const r of en.reps) rec.vol+=en.weight*(r||0);
+  }
+  return [...map.values()].sort((a,b)=>a.week<b.week?-1:1);
+}
+function sessionVolume(sess){
+  let v=0; for(const en of sess.entries) for(const r of en.reps) v+=en.weight*(r||0); return v;
+}
+function prFlags(){
+  const best={}, flags=[];
+  for(const sess of state.sessions){
+    let any=false;
+    for(const en of sess.entries){
+      const e=bestE1rm(en);
+      if(e>(best[en.lift]||0)+1e-9){ if(best[en.lift]!==undefined) any=true; best[en.lift]=e; }
+    }
+    flags.push(any);
+  }
+  return flags;
+}
+function weekStreak(){
+  if(!state.sessions.length) return 0;
+  const weeks=new Set(state.sessions.map(s2=>mondayOf(s2.date)));
+  let wk=mondayOf(todayStr()), streak=0;
+  if(!weeks.has(wk)){ const d=parseDate(wk); d.setDate(d.getDate()-7); wk=todayStr(d); }
+  while(weeks.has(wk)){ streak++; const d=parseDate(wk); d.setDate(d.getDate()-7); wk=todayStr(d); }
+  return streak;
+}
+
+/* ---------------------------------------------------------------- tabs & theme */
+function selectTab(name){
+  for(const b of document.querySelectorAll('nav.tabs button')){
+    const on=b.dataset.tab===name;
+    b.setAttribute('aria-selected',on);
+    $('panel-'+b.dataset.tab).hidden=!on;
+  }
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  if(!state && b.dataset.tab!=='setup') return;
+  selectTab(b.dataset.tab);
+}));
+function applyTheme(){
+  const t=localStorage.getItem('ironplan-theme');
+  if(t) document.documentElement.setAttribute('data-theme',t);
+  else document.documentElement.removeAttribute('data-theme');
+}
+$('themeBtn').addEventListener('click',()=>{
+  const seq=[null,'light','dark'], curT=localStorage.getItem('ironplan-theme');
+  const next=seq[(seq.indexOf(curT)+1)%3];
+  if(next) localStorage.setItem('ironplan-theme',next); else localStorage.removeItem('ironplan-theme');
+  applyTheme(); renderAll();
+});
+applyTheme();
+
+/* ---------------------------------------------------------------- tooltip */
+const tip=$('tooltip');
+function showTip(x,y,rows){
+  tip.textContent='';
+  for(const r of rows){ const d=h('div',{class:r.cls||'tt-row'}); d.textContent=r.text; tip.append(d); }
+  tip.hidden=false;
+  const pad=14, tw=tip.offsetWidth, th=tip.offsetHeight;
+  let left=x+pad, top=y-th-pad;
+  if(left+tw>innerWidth-8) left=x-tw-pad;
+  if(top<8) top=y+pad;
+  tip.style.left=left+'px'; tip.style.top=top+'px';
+}
+function hideTip(){ tip.hidden=true; }
+
+/* ---------------------------------------------------------------- charts */
+function niceStep(raw){
+  const mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  for(const m of [1,2,2.5,5,10]) if(raw<=m*mag) return m*mag;
+  return 10*mag;
+}
+/* line chart of a lift's e1RM over its sessions */
+function lineChart(pts,unit){
+  const W=640,Hc=150,mL=44,mR=14,mT=10,mB=22, pw=W-mL-mR, ph=Hc-mT-mB;
+  const svg=s('svg',{viewBox:`0 0 ${W} ${Hc}`,role:'img','aria-label':'Estimated one-rep max over time'});
+  let lo=Math.min(...pts.map(p=>p.e1)), hi=Math.max(...pts.map(p=>p.e1));
+  if(hi-lo<1){ hi+=5; lo=Math.max(0,lo-5); }
+  const pad=(hi-lo)*0.12; lo-=pad; hi+=pad;
+  const X=i=>pts.length<2? mL+pw/2 : mL+pw*i/(pts.length-1);
+  const Y=v=>mT+ph*(1-(v-lo)/(hi-lo));
+  const step=niceStep((hi-lo)/3);
+  for(let v=Math.ceil(lo/step)*step; v<=hi; v+=step){
+    svg.append(s('line',{x1:mL,x2:W-mR,y1:Y(v),y2:Y(v),stroke:'var(--grid)','stroke-width':1}));
+    svg.append(s('text',{x:mL-8,y:Y(v)+4,'text-anchor':'end'},Math.round(v).toLocaleString()));
+  }
+  svg.append(s('line',{x1:mL,x2:W-mR,y1:mT+ph,y2:mT+ph,stroke:'var(--baseline)','stroke-width':1}));
+  const first=pts[0], last=pts[pts.length-1];
+  svg.append(s('text',{x:X(0),y:Hc-6,'text-anchor':'start'},fmtDate(first.date)));
+  if(pts.length>1) svg.append(s('text',{x:X(pts.length-1),y:Hc-6,'text-anchor':'end'},fmtDate(last.date)));
+  const line=pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.e1).toFixed(1)).join(' ');
+  if(pts.length>1){
+    svg.append(s('path',{d:line+` L ${X(pts.length-1).toFixed(1)} ${mT+ph} L ${X(0).toFixed(1)} ${mT+ph} Z`,fill:'var(--series)',opacity:.1}));
+    svg.append(s('path',{d:line,fill:'none',stroke:'var(--series)','stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  }
+  svg.append(s('circle',{cx:X(pts.length-1),cy:Y(last.e1),r:4.5,fill:'var(--series)',stroke:'var(--card)','stroke-width':2}));
+  /* crosshair + hover */
+  const cross=s('line',{y1:mT,y2:mT+ph,stroke:'var(--baseline)','stroke-width':1,opacity:0});
+  const dot=s('circle',{r:4.5,fill:'var(--series)',stroke:'var(--card)','stroke-width':2,opacity:0});
+  svg.append(cross,dot);
+  const hit=s('rect',{x:mL,y:0,width:pw,height:Hc,fill:'transparent'});
+  hit.addEventListener('pointermove',ev=>{
+    const r=svg.getBoundingClientRect();
+    const mx=(ev.clientX-r.left)/r.width*W;
+    let ix=pts.length<2?0:Math.round((mx-mL)/pw*(pts.length-1));
+    ix=Math.max(0,Math.min(pts.length-1,ix));
+    const p=pts[ix];
+    cross.setAttribute('x1',X(ix)); cross.setAttribute('x2',X(ix)); cross.setAttribute('opacity',1);
+    dot.setAttribute('cx',X(ix)); dot.setAttribute('cy',Y(p.e1)); dot.setAttribute('opacity',1);
+    showTip(ev.clientX,ev.clientY,[
+      {text:fmtDate(p.date),cls:'tt-date'},
+      {text:'e1RM '+Math.round(p.e1)+' '+unit,cls:'tt-val'},
+      {text:'top set '+fmtW(p.w,unit)+' × '+p.topReps+(p.success?'':' (missed)')}
+    ]);
+  });
+  hit.addEventListener('pointerleave',()=>{ cross.setAttribute('opacity',0); dot.setAttribute('opacity',0); hideTip(); });
+  svg.append(hit);
+  return svg;
+}
+/* weekly volume bar chart */
+function barChart(weeks,unit){
+  const W=640,Hc=170,mL=52,mR=14,mT=12,mB=24, pw=W-mL-mR, ph=Hc-mT-mB;
+  const svg=s('svg',{viewBox:`0 0 ${W} ${Hc}`,role:'img','aria-label':'Weekly training volume'});
+  const hi=Math.max(...weeks.map(w=>w.vol))*1.08||1;
+  const Y=v=>mT+ph*(1-v/hi);
+  const step=niceStep(hi/4);
+  const tickFmt=v=> step>=1000 ? (v/1e3).toLocaleString()+'K' : Math.round(v).toLocaleString();
+  for(let v=step; v<=hi; v+=step){
+    svg.append(s('line',{x1:mL,x2:W-mR,y1:Y(v),y2:Y(v),stroke:'var(--grid)','stroke-width':1}));
+    svg.append(s('text',{x:mL-8,y:Y(v)+4,'text-anchor':'end'},tickFmt(v)));
+  }
+  svg.append(s('line',{x1:mL,x2:W-mR,y1:mT+ph,y2:mT+ph,stroke:'var(--baseline)','stroke-width':1}));
+  const n=weeks.length, slot=pw/n, bw=Math.min(24,Math.max(6,slot-8));
+  weeks.forEach((wk,i)=>{
+    const x=mL+slot*i+(slot-bw)/2, y=Y(wk.vol), hgt=Math.max(0,mT+ph-y);
+    const rr=Math.min(4,bw/2,hgt);
+    const dpath=`M ${x} ${mT+ph} V ${y+rr} Q ${x} ${y} ${x+rr} ${y} H ${x+bw-rr} Q ${x+bw} ${y} ${x+bw} ${y+rr} V ${mT+ph} Z`;
+    const bar=s('path',{d:dpath,fill:'var(--series)',tabindex:0,role:'img',
+      'aria-label':'Week of '+fmtDate(wk.week)+': '+compact(wk.vol)+' '+unit});
+    const info=ev=>{
+      bar.setAttribute('opacity',.75);
+      const r2=bar.getBoundingClientRect();
+      showTip(ev&&ev.clientX||r2.x+r2.width/2, ev&&ev.clientY||r2.y,[
+        {text:'Week of '+fmtDate(wk.week),cls:'tt-date'},
+        {text:compact(wk.vol)+' '+unit+' lifted',cls:'tt-val'},
+        {text:wk.sessions+' session'+(wk.sessions>1?'s':'')}
+      ]);
+    };
+    const out=()=>{ bar.removeAttribute('opacity'); hideTip(); };
+    bar.addEventListener('pointermove',info); bar.addEventListener('pointerleave',out);
+    bar.addEventListener('focus',()=>info(null)); bar.addEventListener('blur',out);
+    svg.append(bar);
+    if(n<=13 || i%2===(n-1)%2) svg.append(s('text',{x:x+bw/2,y:Hc-8,'text-anchor':'middle'},fmtDate(wk.week)));
+  });
+  return svg;
+}
+/* 12-point sparkline for the volume stat tile */
+function sparkline(vals){
+  const W=120,Hc=28;
+  const svg=s('svg',{viewBox:`0 0 ${W} ${Hc}`,width:W,height:Hc,'aria-hidden':'true'});
+  if(vals.length<2) return svg;
+  const lo=Math.min(...vals), hi=Math.max(...vals)||1;
+  const X=i=>2+(W-4)*i/(vals.length-1);
+  const Y=v=>3+(Hc-6)*(1-(hi===lo?0.5:(v-lo)/(hi-lo)));
+  svg.append(s('path',{d:vals.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' '),
+    fill:'none',stroke:'var(--series-dim)','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'}));
+  svg.append(s('circle',{cx:X(vals.length-1),cy:Y(vals[vals.length-1]),r:3,fill:'var(--series)'}));
+  return svg;
+}
+
+/* ---------------------------------------------------------------- render: today */
+function renderToday(){
+  const p=$('panel-today'); p.textContent='';
+  if(!state){
+    p.append(h('div',{class:'card'},h('div',{class:'empty'},'Set up your program first — head to the Setup tab, or load the demo lifter to look around.')));
+    return;
+  }
+  const doneToday=state.sessions.filter(s2=>s2.date===todayStr());
+  if(doneToday.length){
+    const last=doneToday[doneToday.length-1];
+    p.append(h('div',{class:'donebanner'},
+      h('span',{class:'big'},'✅'),
+      h('div',{},
+        h('b',{},last.name+' done — '+compact(sessionVolume(last))+' '+state.profile.unit+' moved today. '),
+        h('span',{},'Rest up; the next session is ready below whenever you are.'))));
+  }
+  const i=state.sessions.length;
+  const sess=cur && cur.i===i ? cur.sess : (cur={i,sess:buildSession(i,state.lifts)}).sess;
+  const unit=state.profile.unit;
+
+  const card=h('div',{class:'card'});
+  card.append(h('h2',{},'Session '+(i+1)+' · '+sess.name));
+  card.append(h('p',{class:'sub'},'Tap a circle once when you finish the set with all reps; each further tap subtracts a rep. Rest 90 s between easy sets, 3–5 min when it gets heavy.'));
+  for(const en of sess.entries){
+    const blk=h('div',{class:'exblock'});
+    blk.append(h('div',{class:'exhead'},
+      h('b',{},LIFTS[en.lift].name),
+      h('span',{class:'scheme'},en.target.length+'×'+en.target[0]+' @ '+fmtW(en.weight,unit))));
+    const wus=warmups(en.weight,unit);
+    if(wus.length){
+      const el=h('div',{class:'warmups'},h('b',{},'Warm-up: '));
+      el.append(wus.map(wu=>fmtW(wu.w,unit)+' ×'+wu.reps+(wu.label?' ('+wu.label+')':'')).join(' → '));
+      blk.append(el);
+    }
+    const row=h('div',{class:'setrow'});
+    en.reps.forEach((r,ix)=>{
+      const btn=h('button',{class:'setbtn','aria-label':LIFTS[en.lift].name+' set '+(ix+1)},
+        r===null? String(en.target[ix]) : String(r));
+      if(r!==null) btn.classList.add(r>=en.target[ix]?'logged':'short');
+      btn.addEventListener('click',()=>{
+        en.reps[ix]= en.reps[ix]===null? en.target[ix] : (en.reps[ix]===0? null : en.reps[ix]-1);
+        renderToday();
+      });
+      row.append(btn);
+    });
+    row.append(h('span',{class:'sethint'},'target '+en.target[0]+' reps'));
+    blk.append(row);
+    blk.append(h('div',{class:'plates'},'Load: '+plateText(en.weight,unit)));
+    card.append(blk);
+  }
+  const finish=h('button',{class:'btn'},'Finish session');
+  finish.addEventListener('click',()=>{
+    if(sess.entries.every(en=>en.reps.every(r=>r===null))){
+      if(!confirm('No sets are logged yet — finish anyway with zero reps?')) return;
+    }
+    for(const en of sess.entries) en.reps=en.reps.map(r=>r||0);
+    sess.date=todayStr();
+    state.sessions.push(sess);
+    applySession(state.lifts,sess,unit);
+    cur=null; save(); renderAll(); selectTab('progress');
+  });
+  card.append(h('div',{},finish));
+  card.append(h('p',{class:'note',style:'margin-top:10px'},
+    'Hit every rep and each lift moves up '+Object.entries(INC[unit]).filter(([l])=>sess.entries.some(e2=>e2.lift===l)).map(([l,v])=>fmtW(v,unit)+' ('+LIFTS[l].short.toLowerCase()+')').join(', ')+' next time. Miss three sessions in a row on a lift and it deloads 10% to rebuild momentum.'));
+  p.append(card);
+}
+
+/* ---------------------------------------------------------------- render: program */
+function renderProgram(){
+  const p=$('panel-program'); p.textContent='';
+  if(!state){ p.append(h('div',{class:'card'},h('div',{class:'empty'},'Your program appears here after setup.'))); return; }
+  const unit=state.profile.unit, days=state.profile.days;
+
+  const rules=h('div',{class:'card'});
+  rules.append(h('h2',{},'How your program works'));
+  rules.append(h('p',{class:'sub'},days+' sessions a week, every session built from the five big barbell lifts.'));
+  rules.append(h('ul',{class:'rulelist'},
+    h('li',{},'Work sets are straight sets across (e.g. 3×5 at one weight) after a short ramped warm-up.'),
+    h('li',{},'Complete every rep of every work set and that lift gains '+fmtW(INC[unit].sq,unit)+' next session ('+fmtW(INC[unit].dl,unit)+' for deadlift).'),
+    h('li',{},'Miss reps and the weight holds. Miss three sessions in a row and it deloads 10%, then climbs again — that second run past your old wall is where strength is built.'),
+    h('li',{},'Progress is measured by estimated 1-rep max (Epley: weight × (1 + reps/30)), so a 5-rep set still moves your chart.')));
+  p.append(rules);
+
+  const prev=h('div',{class:'card'});
+  prev.append(h('h2',{},'Next four weeks'));
+  prev.append(h('p',{class:'sub'},'Projected weights assume you make every session. Misses and deloads re-plan automatically.'));
+  const upcoming=projectSessions(days*4);
+  for(let w=0;w<4;w++){
+    const wk=h('div',{class:'weekcard'},h('h4',{},'Week '+(w+1)+(w===0?' · up next':'')));
+    for(let d2=0;d2<days;d2++){
+      const sess=upcoming[w*days+d2];
+      if(!sess) break;
+      wk.append(h('div',{class:'sessline'},
+        h('span',{class:'sname'},sess.name),
+        h('span',{class:'lifts'},sess.entries.map(en=>LIFTS[en.lift].short+' '+en.target.length+'×'+en.target[0]+' @ '+fmtW(en.weight,unit)).join(' · '))));
+    }
+    prev.append(wk);
+  }
+  p.append(prev);
+}
+
+/* ---------------------------------------------------------------- render: progress */
+function statusFor(lift){
+  const L=state.lifts[lift];
+  if(L.lastDeload>=0 && state.sessions.length-L.lastDeload<=Math.ceil(state.profile.days*1.5))
+    return {cls:'deload',text:'deloaded — rebuilding'};
+  if(L.fails>0) return {cls:'hold',text:'holding ('+L.fails+' miss'+(L.fails>1?'es':'')+')'};
+  return {cls:'ok',text:'on track'};
+}
+function renderProgress(){
+  const p=$('panel-progress'); p.textContent='';
+  if(!state || !state.sessions.length){
+    p.append(h('div',{class:'card'},h('div',{class:'empty'},
+      'Charts show up after your first logged session. Finish today’s workout — or open the demo lifter (Setup tab) to see seven weeks of data.')));
+    return;
+  }
+  const unit=state.profile.unit;
+  const weeks=weeklyVolume(), flags=prFlags();
+  const totalVol=weeks.reduce((a,w)=>a+w.vol,0);
+  const thisWk=weeks.find(w=>w.week===mondayOf(todayStr()));
+  const prTotal=flags.filter(Boolean).length;
+  let lastPr='—';
+  for(let i2=flags.length-1;i2>=0;i2--) if(flags[i2]){ lastPr=fmtDate(state.sessions[i2].date); break; }
+
+  const kpi=h('div',{class:'kpirow'});
+  kpi.append(h('div',{class:'tile'},h('div',{class:'tlabel'},'Sessions completed'),
+    h('div',{class:'tvalue'},String(state.sessions.length)),
+    h('div',{class:'tsub'},(thisWk?thisWk.sessions:0)+' of '+state.profile.days+' this week')));
+  kpi.append(h('div',{class:'tile'},h('div',{class:'tlabel'},'Week streak'),
+    h('div',{class:'tvalue'},weekStreak()+' wk'),
+    h('div',{class:'tsub'},'consecutive weeks trained')));
+  const volTile=h('div',{class:'tile'},h('div',{class:'tlabel'},'Total weight lifted'),
+    h('div',{class:'tvalue'},compact(totalVol)+' '+unit),
+    h('div',{class:'tsub'},'weekly volume, last '+Math.min(12,weeks.length)+' wk'));
+  volTile.append(sparkline(weeks.slice(-12).map(w=>w.vol)));
+  kpi.append(volTile);
+  kpi.append(h('div',{class:'tile'},h('div',{class:'tlabel'},'Rep-max PRs'),
+    h('div',{class:'tvalue'},String(prTotal)),
+    h('div',{class:'tsub'},'last PR '+lastPr)));
+  p.append(kpi);
+
+  for(const lift of LIFT_ORDER){
+    const hist=liftHistory(lift);
+    if(!hist.length) continue;
+    const card=h('div',{class:'card liftcard'});
+    const st=statusFor(lift);
+    card.append(h('div',{class:'lifthead'},h('h3',{},LIFTS[lift].name),
+      h('span',{class:'statustag '+st.cls},st.text)));
+    const curE=hist[hist.length-1].e1, back=hist[Math.max(0,hist.length-5)].e1;
+    const dPct=back>0? (curE-back)/back*100 : 0;
+    const e1row=h('div',{class:'e1row'},
+      h('span',{class:'big'},Math.round(curE)+' '+unit),
+      h('span',{class:'meta'},'estimated 1RM'));
+    if(hist.length>1) e1row.append(h('span',{class:'delta '+(dPct>=0?'up':'down')},
+      (dPct>=0?'▲ +':'▼ ')+dPct.toFixed(1)+'% vs 4 sessions ago'));
+    e1row.append(h('span',{class:'meta'},'· next working weight '+fmtW(state.lifts[lift].w,unit)));
+    card.append(e1row);
+    card.append(h('div',{class:'chartbox'},lineChart(hist.slice(-30),unit)));
+    p.append(card);
+  }
+
+  const volCard=h('div',{class:'card'});
+  volCard.append(h('h2',{},'Weekly volume'));
+  volCard.append(h('p',{class:'sub'},'Total weight moved per week (weight × reps, work sets). Steady or gently rising volume with rising e1RMs is the goal.'));
+  volCard.append(h('div',{class:'chartbox'},barChart(weeks.slice(-12),unit)));
+  p.append(volCard);
+
+  const histCard=h('div',{class:'card'});
+  histCard.append(h('h2',{},'Session history'));
+  histCard.append(h('p',{class:'sub'},'Every number in the charts, in table form. Newest first.'));
+  const tbl=h('table',{},h('thead',{},h('tr',{},
+    h('th',{},'Date'),h('th',{},'Session'),h('th',{},'Sets'),h('th',{},'Volume'))));
+  const tb=h('tbody');
+  const list=state.sessions.slice().reverse();
+  for(const sess of list){
+    const pr=flags[sess.i];
+    const setsTd=h('td');
+    sess.entries.forEach((en,ix)=>{
+      if(ix) setsTd.append(h('br'));
+      const line=h('span',{},LIFTS[en.lift].short+' '+fmtW(en.weight,unit)+' — ');
+      const ok=entrySuccess(en);
+      line.append(h('span',{class:ok?'':'miss'},en.reps.join('/')));
+      setsTd.append(line);
+    });
+    const dateTd=h('td',{},fmtDate(sess.date));
+    if(pr) dateTd.append(' ',h('span',{class:'pr'},'PR'));
+    tb.append(h('tr',{},dateTd,h('td',{},sess.name),setsTd,
+      h('td',{},compact(sessionVolume(sess))+' '+unit)));
+  }
+  tbl.append(tb);
+  histCard.append(h('div',{class:'tablewrap'},tbl));
+  p.append(histCard);
+}
+
+/* ---------------------------------------------------------------- render: setup */
+function renderSetup(){
+  const p=$('panel-setup'); p.textContent='';
+  const first=!state;
+  const card=h('div',{class:'card'});
+  card.append(h('h2',{},first?'Set up your program':'Your profile'));
+  card.append(h('p',{class:'sub'},first
+    ?'Two minutes of setup builds your whole progressive program. Start lighter than you think — the program climbs fast, and easy early weeks groove technique.'
+    :'Name and schedule apply immediately. Starting weights only seed a fresh program.'));
+
+  const prof=state? state.profile : {name:'',unit:'lb',days:3,start:{...DEFAULT_START.lb}};
+  const draft={name:prof.name,unit:prof.unit,days:prof.days,start:{...prof.start}};
+
+  const grid=h('div',{class:'formgrid'});
+  const nameIn=h('input',{type:'text',value:draft.name,placeholder:'Your name',maxlength:'24'});
+  grid.append(h('div',{class:'field'},h('label',{},'Name'),nameIn));
+
+  const unitSeg=h('div',{class:'seg',role:'group','aria-label':'Units'});
+  const daysSeg=h('div',{class:'seg',role:'group','aria-label':'Days per week'});
+  const startGrid=h('div',{class:'startgrid'});
+  const startIns={};
+  function drawStart(){
+    startGrid.textContent='';
+    for(const l of LIFT_ORDER){
+      const inp=h('input',{type:'number',step:String(STEP[draft.unit]),min:'0',value:String(draft.start[l])});
+      startIns[l]=inp;
+      startGrid.append(h('div',{class:'field'},h('label',{},LIFTS[l].name+' ('+draft.unit+')'),inp));
+    }
+  }
+  function drawSegs(){
+    unitSeg.textContent=''; daysSeg.textContent='';
+    for(const u of ['lb','kg']){
+      unitSeg.append(h('button',{'aria-pressed':String(draft.unit===u),onclick:()=>{
+        if(draft.unit!==u){ draft.unit=u; draft.start={...DEFAULT_START[u]}; drawSegs(); drawStart(); }
+      }},u==='lb'?'pounds':'kilograms'));
+    }
+    for(const d2 of [3,4]){
+      daysSeg.append(h('button',{'aria-pressed':String(draft.days===d2),onclick:()=>{ draft.days=d2; drawSegs(); }},
+        d2===3?'3 days · full body':'4 days · upper/lower'));
+    }
+  }
+  drawSegs();
+  grid.append(h('div',{class:'field'},h('label',{},'Units'),unitSeg));
+  grid.append(h('div',{class:'field'},h('label',{},'Schedule'),daysSeg));
+  card.append(grid);
+
+  card.append(h('h3',{},'Starting work weights'));
+  card.append(h('p',{class:'note'},'A weight you could lift for 10 clean reps is a perfect 5-rep starting point. Never barbelled before? The defaults below are the classic empty-bar-plus-a-little openers.'));
+  drawStart();
+  card.append(startGrid);
+
+  const saveBtn=h('button',{class:'btn'},first?'Build my program':'Save changes');
+  saveBtn.addEventListener('click',()=>{
+    const name=nameIn.value.trim()||'Lifter';
+    const start={};
+    for(const l of LIFT_ORDER){
+      const v=parseFloat(startIns[l].value);
+      start[l]=roundW(isFinite(v)&&v>0? v : DEFAULT_START[draft.unit][l], draft.unit);
+    }
+    if(state && state.sessions.length && (draft.unit!==state.profile.unit || draft.days!==state.profile.days ||
+        LIFT_ORDER.some(l=>start[l]!==state.profile.start[l]))){
+      if(!confirm('Changing units, schedule, or starting weights restarts the program and clears your history. Continue?')) return;
+      state=null;
+    }
+    if(!state){
+      state={profile:{name,unit:draft.unit,days:draft.days,start},lifts:makeLiftState(start),sessions:[]};
+    }else{
+      state.profile.name=name;
+    }
+    cur=null; save(); renderAll(); selectTab('today');
+  });
+  card.append(h('div',{style:'display:flex;gap:10px;flex-wrap:wrap;margin-top:16px'},saveBtn));
+  p.append(card);
+
+  const extra=h('div',{class:'card'});
+  extra.append(h('h2',{},'Demo & data'));
+  extra.append(h('p',{class:'sub'},'Everything lives in this browser’s local storage.'));
+  const demoBtn=h('button',{class:'btn ghost'},'Load demo lifter');
+  demoBtn.addEventListener('click',()=>{
+    if(state && state.sessions.length && !confirm('Replace your current data with the demo lifter?')) return;
+    loadDemo();
+  });
+  const row=h('div',{style:'display:flex;gap:10px;flex-wrap:wrap'},demoBtn);
+  if(state){
+    const reset=h('button',{class:'btn danger'},'Erase all data');
+    reset.addEventListener('click',()=>{
+      if(!confirm('Erase your profile and every logged session? This cannot be undone.')) return;
+      localStorage.removeItem(KEY); state=null; cur=null; renderAll(); selectTab('setup');
+    });
+    row.append(reset);
+  }
+  extra.append(row);
+  extra.append(h('p',{class:'note',style:'margin-top:12px'},'Demo: seven weeks of a 3-day program, including a bench-press stall and 10% deload so you can see the program adapt in the charts.'));
+  p.append(extra);
+}
+
+/* ---------------------------------------------------------------- demo data */
+function loadDemo(){
+  const start={sq:95,bp:65,dl:135,ohp:45,row:65};
+  state={profile:{name:'Maya',unit:'lb',days:3,start},lifts:makeLiftState(start),sessions:[]};
+  /* last 21 Mon/Wed/Fri dates ending on or before today */
+  const dates=[]; const d=new Date();
+  while(dates.length<21){
+    if([1,3,5].includes(d.getDay())) dates.push(todayStr(d));
+    d.setDate(d.getDate()-1);
+  }
+  dates.reverse();
+  const occ={sq:0,bp:0,dl:0,ohp:0,row:0};
+  /* scripted outcomes: bench stalls at occurrences 7–9 (→ deload), squat and row each drop one rep once */
+  function outcome(lift,o,target){
+    const full=target.slice();
+    if(lift==='bp'){
+      if(o===7) return [5,4,3];
+      if(o===8) return [4,4,3];
+      if(o===9) return [4,3,2];
+    }
+    if(lift==='sq' && o===15) return full.map((r,i2)=>i2===full.length-1? r-1 : r);
+    if(lift==='row' && o===5) return full.map((r,i2)=>i2===full.length-1? r-2 : r);
+    return full;
+  }
+  for(let i=0;i<21;i++){
+    const sess=buildSession(i,state.lifts);
+    sess.date=dates[i];
+    for(const en of sess.entries){ en.reps=outcome(en.lift,occ[en.lift],en.target); occ[en.lift]++; }
+    state.sessions.push(sess);
+    applySession(state.lifts,sess,state.profile.unit);
+  }
+  save(); renderAll(); selectTab('progress');
+}
+
+/* ---------------------------------------------------------------- boot */
+function renderChip(){
+  const chip=$('userChip');
+  if(!state){ chip.hidden=true; $('appTitle').textContent='Get strong in three lifts a day'; return; }
+  chip.hidden=false;
+  $('chipName').textContent=state.profile.name;
+  $('chipMeta').textContent=state.profile.days+'-day program · '+state.profile.unit;
+  $('appTitle').textContent=state.profile.name+'’s strength program';
+}
+function renderAll(){ renderChip(); renderToday(); renderProgram(); renderProgress(); renderSetup(); }
+load();
+renderAll();
+if(!state) selectTab('setup');
+if(location.hash.indexOf('#demo')===0){ loadDemo(); const t=location.hash.split('-')[1]; if(t) selectTab(t); }
+</script>
+<!--/ARTIFACT-->
+</body>
+</html>
