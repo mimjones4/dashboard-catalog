@@ -2,7 +2,7 @@
 
 Model: **Flux Kontext Pro** on [fal.ai](https://fal.ai)
 
-Style baseline for every scene: *Children's storybook illustration, STEM diagrammatic style.* Each prompt references Leo's full character sheet — see [`leo-character-sheet.md`](leo-character-sheet.md) and insert its description in place of `[character sheet]`.
+Style baseline for every scene: *Children's storybook illustration, STEM diagrammatic style.* Each prompt references Leo's full character sheet — see [`leo-character-sheet.md`](leo-character-sheet.md) and insert its description in place of `[character sheet]`. For copy-paste-ready prompts with the description already spliced in, use [`leo-storybook-fal-prompts-resolved.md`](leo-storybook-fal-prompts-resolved.md).
 
 ---
 
