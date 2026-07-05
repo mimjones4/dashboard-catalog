@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ever After — Wedding Command Center</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128141;</text></svg>">
+<style>
+  :root {
+    --font-display: "Cormorant Garamond", "Playfair Display", "Hoefler Text", Didot, Garamond, Cochin, Georgia, serif;
+    --font-body: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    --page: #f3ede3;
+    --surface: #faf7f2;
+    --surface-raised: #fffdf9;
+    --ink: #2b2624;
+    --ink-2: #6b6259;
+    --ink-3: #93887c;
+    --hairline: #e6ddd0;
+    --hairline-strong: #d8ccbb;
+    --accent: #a4523f;         /* validated: 3:1+ on --surface, chroma & lightness in band */
+    --accent-ink: #8a4434;
+    --accent-track: #ecd9d0;
+    --accent-wash: rgba(164, 82, 63, 0.07);
+    --gold: #a3803c;
+    --good: #0ca30c;
+    --good-text: #1e7a1e;
+    --warn: #fab219;
+    --warn-text: #8a6403;
+    --critical: #d03b3b;
+    --shadow: 0 1px 2px rgba(43,38,36,.05), 0 6px 24px -12px rgba(43,38,36,.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #141210;
+      --surface: #201c19;
+      --surface-raised: #282320;
+      --ink: #f4ede4;
+      --ink-2: #c9bfb2;
+      --ink-3: #8f8578;
+      --hairline: #37312b;
+      --hairline-strong: #4a4239;
+      --accent: #c97f5f;       /* validated for the dark surface */
+      --accent-ink: #d99a7e;
+      --accent-track: #453229;
+      --accent-wash: rgba(201, 127, 95, 0.10);
+      --gold: #c9a86a;
+      --good-text: #58c058;
+      --warn-text: #e6b84a;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 80px; }
+
+  h1, h2, h3, .display { font-family: var(--font-display); font-weight: 500; letter-spacing: .01em; }
+  h1 { font-size: clamp(34px, 6vw, 52px); line-height: 1.08; }
+  h2 { font-size: 28px; line-height: 1.15; }
+  h3 { font-size: 21px; }
+  .eyebrow {
+    font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .lede { color: var(--ink-2); font-size: 17px; font-style: italic; }
+  .num { font-family: var(--font-sans); }
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* ---------- shared components ---------- */
+  .card {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 14px; padding: 22px; box-shadow: var(--shadow);
+  }
+  .btn {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+    border: 1px solid var(--hairline-strong); border-radius: 999px;
+    background: var(--surface-raised); color: var(--ink);
+    padding: 9px 18px; cursor: pointer; transition: all .15s ease;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); color: #fff; }
+  .btn-small { padding: 5px 12px; font-size: 12.5px; }
+  .btn-ghost { border-color: transparent; background: transparent; color: var(--ink-2); }
+  .btn-ghost:hover { background: var(--accent-wash); }
+
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    font-family: var(--font-body); font-size: 15px; color: var(--ink);
+    background: var(--surface-raised); border: 1px solid var(--hairline-strong);
+    border-radius: 9px; padding: 9px 12px; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  label.field-label {
+    display: block; font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 6px;
+  }
+  .field { margin-bottom: 18px; }
+
+  input[type="checkbox"] {
+    appearance: none; width: 19px; height: 19px; flex: 0 0 19px;
+    border: 1.5px solid var(--hairline-strong); border-radius: 50%;
+    background: var(--surface-raised); cursor: pointer; position: relative; top: 2px;
+    transition: all .15s ease;
+  }
+  input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
+  input[type="checkbox"]:checked::after {
+    content: ""; position: absolute; left: 5.5px; top: 2.5px; width: 4px; height: 8px;
+    border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+
+  .chip {
+    display: inline-block; font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; padding: 4px 12px; border-radius: 999px;
+    background: var(--accent-wash); color: var(--accent-ink); border: 1px solid transparent;
+  }
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-sans); font-size: 11.5px; font-weight: 600;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .tag-good { color: var(--good-text); background: rgba(12,163,12,.09); }
+  .tag-warn { color: var(--warn-text); background: rgba(250,178,25,.13); }
+  .tag-critical { color: var(--critical); background: rgba(208,59,59,.10); }
+  .tag-muted { color: var(--ink-3); background: var(--accent-wash); }
+
+  .divider { border: 0; border-top: 1px solid var(--hairline); margin: 20px 0; }
+  .flourish { text-align: center; color: var(--gold); font-size: 18px; letter-spacing: .5em; margin: 8px 0 4px; user-select: none; }
+
+  /* ---------- nav ---------- */
+  nav.tabs {
+    display: flex; gap: 4px; flex-wrap: wrap; margin: 26px 0 30px;
+    border-bottom: 1px solid var(--hairline); padding-bottom: 0;
+  }
+  nav.tabs button {
+    font-family: var(--font-sans); font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+    background: none; border: none; border-bottom: 2px solid transparent;
+    padding: 10px 14px; cursor: pointer; border-radius: 8px 8px 0 0;
+  }
+  nav.tabs button:hover { color: var(--accent-ink); background: var(--accent-wash); }
+  nav.tabs button.active { color: var(--accent-ink); border-bottom-color: var(--accent); }
+
+  /* ---------- onboarding ---------- */
+  .onboard { max-width: 560px; margin: 0 auto; }
+  .onboard-head { text-align: center; margin: 40px 0 34px; }
+  .keyword-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 540px) { .keyword-row { grid-template-columns: 1fr; } }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 540px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ---------- overview ---------- */
+  .hero { text-align: center; padding: 34px 20px 26px; }
+  .hero .names { font-size: clamp(36px, 7vw, 58px); }
+  .amp { color: var(--gold); font-style: italic; padding: 0 .12em; }
+  .countdown { font-size: clamp(44px, 8vw, 68px); line-height: 1; color: var(--accent-ink); }
+  .kw-chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+  @media (max-width: 700px) { .overview-grid { grid-template-columns: 1fr; } }
+  .snap-list { list-style: none; }
+  .snap-list li { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--hairline); align-items: baseline; }
+  .snap-list li:last-child { border-bottom: none; }
+
+  /* meter (progress) */
+  .meter { height: 8px; border-radius: 4px; background: var(--accent-track); overflow: hidden; }
+  .meter > span { display: block; height: 100%; border-radius: 4px; background: var(--accent); min-width: 2px; transition: width .3s ease; }
+
+  /* ---------- timeline ---------- */
+  .month-block { position: relative; padding-left: 30px; margin-bottom: 8px; }
+  .month-block::before {
+    content: ""; position: absolute; left: 8px; top: 34px; bottom: -6px;
+    width: 1px; background: var(--hairline-strong);
+  }
+  .month-block:last-child::before { display: none; }
+  .month-dot {
+    position: absolute; left: 2px; top: 14px; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--page); border: 2px solid var(--accent);
+  }
+  .month-block.month-done .month-dot { background: var(--accent); }
+  .month-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 8px 0 2px; cursor: pointer; }
+  .month-when { font-family: var(--font-sans); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
+  .month-blurb { color: var(--ink-2); font-style: italic; font-size: 14.5px; margin: 2px 0 10px; }
+  .task { display: flex; gap: 11px; padding: 7px 0; align-items: flex-start; }
+  .task .wk {
+    font-family: var(--font-sans); font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+    color: var(--ink-3); text-transform: uppercase; flex: 0 0 52px; padding-top: 4px;
+  }
+  .task label.tx { cursor: pointer; flex: 1; }
+  .task.done label.tx { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--hairline-strong); }
+  .month-tasks { padding-bottom: 14px; }
+
+  /* ---------- vendors ---------- */
+  .vendor-card { margin-bottom: 16px; }
+  .vendor-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; cursor: pointer; }
+  .vendor-head h3 { flex: 1; min-width: 160px; }
+  .vendor-status select { width: auto; font-family: var(--font-sans); font-size: 13px; padding: 6px 10px; }
+  .q-list { list-style: none; margin-top: 14px; }
+  .q-list li { display: flex; gap: 11px; padding: 7px 0; border-top: 1px dashed var(--hairline); align-items: flex-start; }
+  .q-list li label { cursor: pointer; flex: 1; }
+  .q-list li.done label { color: var(--ink-3); }
+  .vendor-notes { margin-top: 12px; }
+  .vendor-notes textarea { min-height: 60px; resize: vertical; font-size: 14px; }
+
+  /* ---------- budget (viz) ---------- */
+  .viz-root { position: relative; }
+  .budget-row { padding: 10px 0; border-bottom: 1px dashed var(--hairline); }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-row-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 5px; }
+  .budget-cat { font-size: 15.5px; }
+  .budget-figs { font-family: var(--font-sans); font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+  .budget-figs b { color: var(--ink); font-weight: 600; }
+  .budget-bar-lane { display: flex; align-items: center; gap: 14px; }
+  .budget-lane-track { flex: 1; }
+  .budget-bar { height: 14px; border-radius: 0 4px 4px 0; background: var(--accent-track); position: relative; overflow: hidden; box-shadow: inset 1px 0 0 var(--hairline-strong); }
+  .budget-bar > .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; }
+  .budget-spent-input { width: 110px !important; font-family: var(--font-sans); font-size: 13px; padding: 5px 9px; text-align: right; }
+  .viz-tip {
+    position: absolute; z-index: 10; pointer-events: none; display: none;
+    background: var(--surface-raised); border: 1px solid var(--hairline-strong); border-radius: 9px;
+    padding: 8px 12px; font-family: var(--font-sans); font-size: 12.5px; box-shadow: var(--shadow);
+    max-width: 240px;
+  }
+  .budget-summary { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 18px; }
+  .stat-tile { flex: 1 1 130px; }
+  .stat-tile .v { font-family: var(--font-sans); font-size: 26px; font-weight: 650; letter-spacing: -.01em; }
+  .stat-tile .l { font-family: var(--font-sans); font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; }
+
+  /* ---------- payments ---------- */
+  .pay-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px dashed var(--hairline); }
+  .pay-row:last-child { border-bottom: none; }
+  .pay-main { flex: 1; }
+  .pay-when { font-family: var(--font-sans); font-size: 12px; color: var(--ink-3); }
+  .pay-amt { font-family: var(--font-sans); font-size: 15px; font-weight: 600; white-space: nowrap; padding-top: 2px; }
+  .pay-row.paid .pay-main, .pay-row.paid .pay-amt { color: var(--ink-3); }
+  .pay-row.paid .pay-title { text-decoration: line-through; text-decoration-color: var(--hairline-strong); }
+  .add-inline { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 14px; }
+  @media (max-width: 640px) { .add-inline { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- rsvp ---------- */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  @media (max-width: 640px) { .kpi-row { grid-template-columns: 1fr 1fr; } }
+  .guest-row { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--hairline); flex-wrap: wrap; }
+  .guest-name { flex: 1 1 150px; }
+  .guest-meta { font-family: var(--font-sans); font-size: 12px; color: var(--ink-3); }
+  .guest-row select { width: auto; font-family: var(--font-sans); font-size: 12.5px; padding: 5px 8px; }
+  .add-guest { display: grid; grid-template-columns: 2fr 70px 1.2fr 1.2fr auto; gap: 10px; align-items: end; margin-top: 16px; }
+  @media (max-width: 700px) { .add-guest { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- seating ---------- */
+  .tables-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 16px; }
+  .table-card { background: var(--surface-raised); border: 1px solid var(--hairline); border-radius: 12px; padding: 16px; }
+  .table-card h4 { font-family: var(--font-display); font-size: 19px; font-weight: 500; }
+  .table-cap { font-family: var(--font-sans); font-size: 11.5px; color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
+  .seat-list { list-style: none; margin-top: 10px; }
+  .seat-list li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 0; font-size: 14.5px; border-top: 1px dashed var(--hairline); }
+  .seat-group { font-family: var(--font-sans); font-size: 10.5px; color: var(--ink-3); }
+  .unassigned-chip {
+    display: inline-flex; align-items: center; gap: 7px; margin: 4px 6px 4px 0;
+    border: 1px solid var(--hairline-strong); border-radius: 999px; padding: 5px 8px 5px 14px;
+    background: var(--surface-raised); font-size: 14px;
+  }
+  .unassigned-chip select { width: auto; font-family: var(--font-sans); font-size: 12px; padding: 3px 6px; border-radius: 6px; }
+  .conflict-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .conflict-row select { width: auto; flex: 1 1 140px; font-family: var(--font-sans); font-size: 13px; }
+  .x-btn { background: none; border: none; color: var(--ink-3); cursor: pointer; font-size: 15px; padding: 2px 6px; border-radius: 6px; }
+  .x-btn:hover { color: var(--critical); background: rgba(208,59,59,.08); }
+
+  .section-intro { margin-bottom: 22px; }
+  .section-intro h2 { margin-bottom: 6px; }
+  .empty-note { color: var(--ink-3); font-style: italic; padding: 14px 0; }
+  footer.app-foot { margin-top: 56px; text-align: center; color: var(--ink-3); font-size: 13px; }
+  footer.app-foot .foot-actions { margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  @media print {
+    nav.tabs, .btn, .foot-actions, input.budget-spent-input { display: none !important; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="viz-tip" id="vizTip"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Ever After — a wedding planning command center.
+   All data lives in localStorage; nothing leaves this browser.
+   ============================================================ */
+
+const STORE_KEY = "everAfter.v1";
+
+const $app = document.getElementById("app");
+const $tip = document.getElementById("vizTip");
+
+/* ---------- state ---------- */
+function blankState() {
+  return {
+    setup: null, // {names, date, venueType, budget, guestCount, keywords:[..3]}
+    view: "overview",
+    tasksDone: {},        // taskId -> true
+    vendorChecks: {},     // "vendorId.qIdx" -> true
+    vendors: {},          // vendorId -> {status, notes}
+    budgetSpent: {},      // categoryId -> number
+    paymentsPaid: {},     // paymentId -> true
+    customPayments: [],   // {id, title, due, amount}
+    guests: [],           // {id, name, party, group, status}
+    conflicts: [],        // [idA, idB]
+    tables: [],           // {id, name, capacity, seats:[guestIds]}
+    openMonths: {},       // monthsOut -> bool (timeline accordion)
+    openVendors: {}       // vendorId -> bool
+  };
+}
+let state = load();
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return Object.assign(blankState(), JSON.parse(raw));
+  } catch (e) { /* corrupted store — start fresh */ }
+  return blankState();
+}
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function uid() { return Math.random().toString(36).slice(2, 9); }
+
+/* ---------- helpers ---------- */
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function money(n) {
+  return "$" + Math.round(n).toLocaleString("en-US");
+}
+function weddingDate() { return new Date(state.setup.date + "T12:00:00"); }
+function daysUntil() { return Math.ceil((weddingDate() - new Date()) / 86400000); }
+function monthsBefore(n) {
+  const d = weddingDate(); d.setMonth(d.getMonth() - n); return d;
+}
+function monthLabel(d) { return d.toLocaleDateString("en-US", { month: "long", year: "numeric" }); }
+function niceDate(d) { return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }); }
+function firstNames() {
+  return state.setup.names.split(/\s*(?:&|\band\b|\+)\s*/i).map(s => s.trim()).filter(Boolean);
+}
+function kw(i) { return state.setup.keywords[i] || ""; }
+
+const VENUE_TYPES = {
+  garden:      { label: "Garden / estate",    place: "garden" },
+  ballroom:    { label: "Ballroom / hotel",   place: "ballroom" },
+  barn:        { label: "Barn / rustic",      place: "barn" },
+  beach:       { label: "Beach / coastal",    place: "beach" },
+  vineyard:    { label: "Vineyard / winery",  place: "vineyard" },
+  loft:        { label: "City loft / industrial", place: "loft" },
+  backyard:    { label: "Backyard / at home", place: "backyard" },
+  destination: { label: "Destination",        place: "destination venue" }
+};
+
+/* ============================================================
+   TIMELINE — 12 months of weekly tasks, personalized
+   ============================================================ */
+const VENUE_TASKS = {
+  garden: {
+    7: "Nail down the weather plan — get a tent on hold and price the side walls now, not in a panic later.",
+    6: "Walk the garden at dusk and plan evening light: strings, lanterns, path markers.",
+    3: "Order guest comforts — wraps or fans for the ceremony, a basket of bug spray, an umbrella stash."
+  },
+  ballroom: {
+    10: "Confirm the ballroom's food & beverage minimums and what the in-house catering actually includes.",
+    6: "Book the uplighting/décor walkthrough — ballrooms transform completely with the right light.",
+    3: "Sort valet and parking validation so guests glide in without thinking about it."
+  },
+  barn: {
+    8: "Reserve the big rentals — tables, chairs, linens, and dishware rarely come with a barn.",
+    6: "Plan lighting and power: string lights, a generator quote, and where the band plugs in.",
+    4: "Think guest comfort: fans or heaters depending on season, and clear signage from parking.",
+    2: "Schedule the pest treatment / bug plan with the venue for the week before."
+  },
+  beach: {
+    10: "Check permits for the ceremony spot — beach use, amplified sound, and chairs often need one.",
+    6: "Choose wind-proof décor (weighted, low, secured) and confirm a sound system that beats the surf.",
+    5: "Time the ceremony to the tide chart and golden hour — your photographer will thank you.",
+    3: "Plan the footwear story: a shoe valet basket, or tell guests early it's a barefoot affair."
+  },
+  vineyard: {
+    11: "Ask the vineyard about harvest-season blackout dates before you fall in love with a weekend.",
+    7: "Book the wine pairing tasting — pouring the estate's own wine is half the magic.",
+    5: "Arrange shuttles — vineyards are gorgeous and remote, and your guests will be tasting."
+  },
+  loft: {
+    8: "Get the building's load-in rules in writing: freight elevator hours, insurance certificates.",
+    6: "Book a lighting designer — raw space plus great light is the whole look.",
+    5: "Confirm sound restrictions and neighbor rules for the end of the night."
+  },
+  backyard: {
+    9: "Order the infrastructure: tent, restrooms, and a rental walk-through of the yard.",
+    8: "Talk to the neighbors and check local permits for noise and parking.",
+    6: "Get a power plan — a generator quote beats a blown fuse during the first dance.",
+    2: "Book a professional cleanup crew for the day after. Future you insists."
+  },
+  destination: {
+    11: "Lock room blocks and travel details early — your guests are booking flights, not just a Saturday.",
+    10: "Research the marriage-license and residency rules for the location (some need days on the ground).",
+    3: "Plan a welcome gathering and figure out what décor ships vs. what gets bought there.",
+    2: "Assemble welcome bags: itinerary, local treats, and a heartfelt note from you both."
+  }
+};
+
+function timelinePlan() {
+  const s = state.setup;
+  const venue = VENUE_TYPES[s.venueType] || VENUE_TYPES.garden;
+  const [k1, k2, k3] = s.keywords;
+  const base = {
+    12: { title: "Dream it up", blurb: `This month is pure imagination — everything ${esc(k1)} and ${esc(k2)} is allowed.`, weeks: [
+      `Sit down together over something nice and name what matters most. You already have three words: ${esc(k1)}, ${esc(k2)}, ${esc(k3)}.`,
+      `Set the total budget and agree on who's contributing what — kindly, and in writing.`,
+      `Draft the guest list. Rough numbers unlock every other decision.`,
+      `Start a shared inspiration folder for anything that feels ${esc(k1)} or ${esc(k3)}.`
+    ]},
+    11: { title: "Lock the big pieces", blurb: "The date and the place — everything else hangs on these two.", weeks: [
+      `Tour ${venue.place}s that fit the vision. Bring your three words and see which space already feels like them.`,
+      `Book the venue and set the date. Toast it.`,
+      `Choose your wedding party and ask them in a way you'll want to remember.`,
+      `Decide on a planner or coordinator — even month-of help changes everything.`
+    ]},
+    10: { title: "Build your dream team", blurb: "The people who will capture and carry the day.", weeks: [
+      `Interview photographers — ask for full galleries, not just highlights — and book your favorite.`,
+      `Book a videographer if moving pictures matter to you (you can't re-hear the vows otherwise).`,
+      `Start attire shopping. First fittings take longer than you think, and that's the fun kind of long.`,
+      `Reserve hotel room blocks and start a simple wedding website.`
+    ]},
+    9: { title: "Food, music & the fun stuff", blurb: "The parts guests still talk about years later.", weeks: [
+      `Schedule catering tastings. Yes, all of them.`,
+      `Book the caterer and sketch the bar plan.`,
+      `Book your band or DJ — dance floors are made or broken here.`,
+      `Set up the registry while it still feels fun and not like admin.`
+    ]},
+    8: { title: "Tell the world", blurb: "Save-the-dates out, key artists in.", weeks: [
+      `Order and send save-the-dates (earlier if many guests travel).`,
+      `Book the florist — bring the inspiration folder and your words: ${esc(k1)}, ${esc(k2)}, ${esc(k3)}.`,
+      `Book your officiant and start imagining the ceremony you actually want.`,
+      `Research hair & makeup artists and shortlist two or three.`
+    ]},
+    7: { title: "Details with heart", blurb: "The month of quiet, satisfying decisions.", weeks: [
+      `Order attire — allow generous time for alterations.`,
+      `Book transportation for the wedding party (and guests, if the venue is tucked away).`,
+      `Plan the honeymoon. Check the passports today, not in month one.`,
+      `Book hair & makeup and get the trial on the calendar.`
+    ]},
+    6: { title: "Paper & light", blurb: "Halfway. Look how much is already real.", weeks: [
+      `Order invitations and anything printed — menus, programs, signage.`,
+      `Do the cake tastings and book your baker.`,
+      `Walk the venue for rentals and lighting — where does the evening glow come from?`,
+      `Shape the ceremony: readings, music moments, who walks with whom.`
+    ]},
+    5: { title: "Try it on", blurb: "Rehearsing the feeling of the day, one detail at a time.", weeks: [
+      `Hair & makeup trial — photograph it in daylight and at night.`,
+      `Order the wedding rings (engraving adds weeks).`,
+      `Finalize the menu with the caterer, including kids' and dietary plates.`,
+      `First attire fitting. Bring the shoes.`
+    ]},
+    4: { title: "The home stretch begins", blurb: "Small boxes, big feelings.", weeks: [
+      `Order favors and welcome-bag bits that feel ${esc(k2)} — skip anything you wouldn't keep yourself.`,
+      `Write the first draft of your vows. Terrible first drafts are required and traditional.`,
+      `Confirm the day-of timeline with the photographer and music.`,
+      `Look up your marriage-license requirements and put the appointment window on the calendar.`
+    ]},
+    3: { title: "Send it", blurb: "Invitations fly; the day starts writing back.", weeks: [
+      `Mail the invitations, with RSVPs due about four weeks before the day.`,
+      `Schedule final fittings and break in the shoes around the house.`,
+      `Send a draft day-of timeline to every vendor and your wedding party.`,
+      `Book beauty maintenance for the week-of (and nothing brand-new!).`
+    ]},
+    2: { title: "Gather the yeses", blurb: "The guest list becomes real people with dinner plates.", weeks: [
+      `Nudge straggler RSVPs kindly — a text works wonders.`,
+      `Take a first pass at the seating chart while the RSVPs land (the Seating tab is ready for you).`,
+      `Get the marriage license.`,
+      `Review the Payments tab — most final balances land in the next few weeks.`
+    ]},
+    1: { title: "Landing gear down", blurb: "Hand things off. Your only job soon is to be present.", weeks: [
+      `Give the final headcount to the caterer and venue.`,
+      `Finalize the seating chart and order place cards.`,
+      `Pack for the honeymoon and build a little day-of emergency kit.`,
+      `Confirm arrival times with every vendor and hand off a day-of contact who isn't you.`
+    ]},
+    0: { title: "Wedding week", blurb: `It's here. Everything ${esc(k1)}, ${esc(k2)} and ${esc(k3)} you dreamed up — this is the week it becomes a memory.`, weeks: [
+      `Rehearse the ceremony and raise a glass at the rehearsal dinner.`,
+      `Delegate every remaining task. All of them. You're done producing; you're the point now.`,
+      `Pick up and steam the attire; lay everything out the night before.`,
+      `Take one quiet moment together the morning of. Then go get married — that's the whole list.`
+    ]}
+  };
+  const vt = VENUE_TASKS[s.venueType] || {};
+  const months = [];
+  for (let m = 12; m >= 0; m--) {
+    const b = base[m];
+    const weeks = b.weeks.map((text, i) => ({ id: `m${m}w${i}`, wk: `Week ${i + 1}`, text }));
+    if (vt[m]) weeks.push({ id: `m${m}v0`, wk: "Also", text: vt[m] });
+    months.push({
+      m,
+      title: b.title,
+      blurb: b.blurb,
+      when: m === 0 ? "Wedding week" : `${m} month${m > 1 ? "s" : ""} to go`,
+      cal: m === 0 ? niceDate(weddingDate()) : monthLabel(monthsBefore(m)),
+      weeks
+    });
+  }
+  return months;
+}
+
+/* ============================================================
+   VENDORS — research questions per vendor type
+   ============================================================ */
+const VENDORS = [
+  { id: "venue", name: "Venue", icon: "🏛", qs: [
+    "What dates are open around our target, and how far out do you book?",
+    "What exactly is included in the fee — tables, chairs, linens, setup and teardown?",
+    "Are there catering restrictions or a required vendor list?",
+    "What's the weather backup plan, and does it cost extra to trigger it?",
+    "When can vendors load in, and what time does music have to end?",
+    "What are the deposit, payment schedule, and cancellation terms?",
+    "How many events do you host per day — will ours be the only one?"
+  ]},
+  { id: "caterer", name: "Caterer", icon: "🍽", qs: [
+    "Can we schedule a tasting before we sign?",
+    "How do you handle dietary restrictions and allergies?",
+    "What's the staff-to-guest ratio for service?",
+    "Are cake-cutting, bar service, and rentals (plates, glassware) included or extra?",
+    "When do you need the final headcount?",
+    "How are service fees and gratuities calculated — what does the bottom line really look like?"
+  ]},
+  { id: "photographer", name: "Photographer", icon: "📷", qs: [
+    "Will you personally be shooting our wedding, or an associate?",
+    "Can we see two or three complete galleries, not just portfolio highlights?",
+    "How many hours are covered, and what's the overtime rate?",
+    "When do we receive photos, and do we get printing rights?",
+    "What's your backup plan — second shooter, duplicate cards, gear failure?",
+    "Have you shot at our venue (or one with similar light) before?"
+  ]},
+  { id: "videographer", name: "Videographer", icon: "🎞", qs: [
+    "What's delivered — highlight film, full ceremony, speeches, raw footage?",
+    "How do you capture clean audio for vows and toasts?",
+    "How do you work alongside the photographer without crowding moments?",
+    "What's the turnaround time for the final film?",
+    "Is drone coverage possible — and allowed at our venue?"
+  ]},
+  { id: "florist", name: "Florist", icon: "💐", qs: [
+    "Given our style words and budget, what's realistic — and where would you splurge vs. save?",
+    "Which flowers are actually in season for our date?",
+    "Do you deliver, set up, and move ceremony pieces to the reception?",
+    "Can we see a sample centerpiece before the wedding?",
+    "What can we rent (vases, arches, candles) instead of buying?",
+    "When do final counts and design decisions lock?"
+  ]},
+  { id: "music", name: "Band / DJ", icon: "🎶", qs: [
+    "Can we hear you live or watch a full, unedited set?",
+    "How do you handle our must-play and do-not-play lists?",
+    "Do you MC — announcements, introductions, keeping the timeline moving?",
+    "What are your space, power, and setup needs, and what's the equipment backup?",
+    "What's the overtime rate if the dance floor refuses to quit?",
+    "How do you read a room that's losing steam?"
+  ]},
+  { id: "beauty", name: "Hair & Makeup", icon: "💄", qs: [
+    "Is a trial included, and can we schedule it before the final fitting?",
+    "How many artists come for a party our size, and what's the morning timeline?",
+    "Do you travel to our getting-ready location?",
+    "What products do you use, and how do they hold up in photos and weather?",
+    "Can you stay for touch-ups, or leave a kit?"
+  ]},
+  { id: "officiant", name: "Officiant", icon: "📜", qs: [
+    "Can we write our own vows and shape the ceremony ourselves?",
+    "Are pre-marriage sessions required or offered?",
+    "Will you attend the rehearsal?",
+    "Do you handle filing the marriage license?",
+    "How do you work with a microphone, and what will you wear?"
+  ]},
+  { id: "cake", name: "Cake & Desserts", icon: "🍰", qs: [
+    "Can we book a tasting, and how many flavors can we try?",
+    "Is delivery and on-site assembly included?",
+    "How do you handle allergies — gluten-free, nut-free, vegan tiers?",
+    "Can you design from our inspiration photos and style words?",
+    "When are the final design and serving count due?"
+  ]},
+  { id: "planner", name: "Planner / Coordinator", icon: "📋", qs: [
+    "What's the difference between your full-service and month-of packages?",
+    "How many weddings do you take on our weekend?",
+    "Are your vendor referrals commission-free?",
+    "Who exactly is on-site on the day, and for how long?",
+    "How do we communicate — and what's the emergency plan if you're ill?"
+  ]}
+];
+
+/* ============================================================
+   BUDGET — allocation by venue type
+   ============================================================ */
+const BUDGET_BASE = [
+  { id: "venue",      name: "Venue & rentals",        pct: 20 },
+  { id: "catering",   name: "Catering & bar",         pct: 24 },
+  { id: "photo",      name: "Photography",            pct: 10 },
+  { id: "video",      name: "Videography",            pct: 4 },
+  { id: "attire",     name: "Attire & accessories",   pct: 7 },
+  { id: "beauty",     name: "Hair & makeup",          pct: 2 },
+  { id: "flowers",    name: "Flowers & décor",        pct: 8 },
+  { id: "music",      name: "Music & entertainment",  pct: 6 },
+  { id: "stationery", name: "Stationery & signage",   pct: 3 },
+  { id: "cake",       name: "Cake & desserts",        pct: 2 },
+  { id: "transport",  name: "Transportation",         pct: 2 },
+  { id: "rings",      name: "Wedding rings",          pct: 3 },
+  { id: "favors",     name: "Favors & gifts",         pct: 1 },
+  { id: "officiant",  name: "Officiant & ceremony",   pct: 1 },
+  { id: "planner",    name: "Planning & coordination",pct: 3 },
+  { id: "buffer",     name: "Just-in-case cushion",   pct: 4 }
+];
+// Per-venue nudges; each set of deltas sums to zero.
+const BUDGET_MODS = {
+  garden:      { flowers: +2, buffer: +1, venue: -1, catering: -2 },
+  ballroom:    { venue: +4, catering: +1, flowers: -2, transport: -1, buffer: -1, music: -1 },
+  barn:        { flowers: +2, catering: +1, transport: +1, buffer: +1, venue: -2, music: -1, stationery: -1, favors: -1 },
+  beach:       { transport: +2, music: +1, buffer: +1, venue: -2, flowers: -1, catering: -1 },
+  vineyard:    { catering: +2, venue: +1, transport: +1, flowers: -1, music: -1, buffer: -1, favors: -1 },
+  loft:        { flowers: +2, music: +1, venue: -1, catering: -1, transport: -1 },
+  backyard:    { catering: +3, flowers: +2, buffer: +2, photo: +1, music: +1, venue: -8, transport: -1 },
+  destination: { transport: +4, favors: +1, stationery: +1, video: +1, venue: -2, flowers: -2, music: -1, cake: -1, buffer: -1 }
+};
+function budgetPlan() {
+  const mods = BUDGET_MODS[state.setup.venueType] || {};
+  const total = Number(state.setup.budget) || 0;
+  return BUDGET_BASE.map(c => {
+    const pct = Math.max(0, c.pct + (mods[c.id] || 0));
+    return { ...c, pct, amount: total * pct / 100 };
+  }).filter(c => c.pct > 0);
+}
+
+/* ============================================================
+   PAYMENTS — generated deadlines + custom entries
+   ============================================================ */
+function generatedPayments() {
+  const alloc = Object.fromEntries(budgetPlan().map(c => [c.id, c.amount]));
+  const w = weddingDate();
+  const daysB = n => { const d = new Date(w); d.setDate(d.getDate() - n); return d; };
+  const P = (id, title, date, amount) => ({ id, title, due: date, amount, generated: true });
+  return [
+    P("venueDep",  "Venue deposit (typically 50%)",            monthsBefore(11), (alloc.venue || 0) * 0.5),
+    P("photoDep",  "Photographer retainer (~30%)",             monthsBefore(10), (alloc.photo || 0) * 0.3),
+    P("caterDep",  "Caterer deposit (~25%)",                   monthsBefore(9),  (alloc.catering || 0) * 0.25),
+    P("musicDep",  "Band / DJ deposit (~50%)",                 monthsBefore(8),  (alloc.music || 0) * 0.5),
+    P("florDep",   "Florist deposit (~25%)",                   monthsBefore(6),  (alloc.flowers || 0) * 0.25),
+    P("attireBal", "Attire balance at final fitting",          monthsBefore(3),  (alloc.attire || 0) * 0.5),
+    P("venueBal",  "Venue balance",                            monthsBefore(1),  (alloc.venue || 0) * 0.5),
+    P("florBal",   "Florist balance",                          daysB(14),        (alloc.flowers || 0) * 0.75),
+    P("caterBal",  "Caterer balance (with final headcount)",   daysB(14),        (alloc.catering || 0) * 0.75),
+    P("photoBal",  "Photographer balance",                     daysB(14),        (alloc.photo || 0) * 0.7),
+    P("musicBal",  "Band / DJ balance",                        daysB(7),         (alloc.music || 0) * 0.5),
+    P("tips",      "Day-of tips & gratuities (cash envelopes)",daysB(2),         (Number(state.setup.budget) || 0) * 0.02)
+  ];
+}
+function allPayments() {
+  const custom = state.customPayments.map(p => ({ ...p, due: new Date(p.due + "T12:00:00"), generated: false }));
+  return [...generatedPayments(), ...custom].sort((a, b) => a.due - b.due);
+}
+
+/* ============================================================
+   SEATING — group-aware auto arrangement
+   ============================================================ */
+function seatableGuests() {
+  return state.guests.filter(g => g.status !== "declined");
+}
+function guestById(id) { return state.guests.find(g => g.id === id); }
+function hasConflict(guestId, tableSeats) {
+  return state.conflicts.some(([a, b]) =>
+    (a === guestId && tableSeats.includes(b)) || (b === guestId && tableSeats.includes(a)));
+}
+function tableFree(t) {
+  const used = t.seats.reduce((n, id) => n + (guestById(id)?.party || 0), 0);
+  return t.capacity - used;
+}
+function autoArrange() {
+  state.tables.forEach(t => t.seats = []);
+  if (!state.tables.length) defaultTables();
+  // Group guests by relationship group, biggest groups first, biggest parties first.
+  const groups = {};
+  for (const g of seatableGuests()) {
+    const key = (g.group || "Friends").trim().toLowerCase();
+    (groups[key] = groups[key] || []).push(g);
+  }
+  const ordered = Object.values(groups)
+    .sort((a, b) => b.reduce((n, g) => n + g.party, 0) - a.reduce((n, g) => n + g.party, 0));
+  for (const grp of ordered) {
+    grp.sort((a, b) => b.party - a.party);
+    for (const g of grp) {
+      // Prefer the table already holding the most of this guest's group,
+      // then the fullest table that still fits (packs groups tightly together).
+      let best = null, bestScore = -1;
+      for (const t of state.tables) {
+        if (tableFree(t) < g.party) continue;
+        if (hasConflict(g.id, t.seats)) continue;
+        const groupmates = t.seats.filter(id => {
+          const o = guestById(id);
+          return o && (o.group || "Friends").trim().toLowerCase() === (g.group || "Friends").trim().toLowerCase();
+        }).length;
+        const score = groupmates * 1000 + (t.capacity - tableFree(t));
+        if (score > bestScore) { bestScore = score; best = t; }
+      }
+      if (best) best.seats.push(g.id);
+    }
+  }
+  save();
+}
+function defaultTables() {
+  const seatsNeeded = seatableGuests().reduce((n, g) => n + g.party, 0) ||
+    Number(state.setup.guestCount) || 0;
+  const count = Math.max(1, Math.ceil(seatsNeeded / 8));
+  state.tables = Array.from({ length: count }, (_, i) =>
+    ({ id: uid(), name: `Table ${i + 1}`, capacity: 8, seats: [] }));
+}
+
+/* ============================================================
+   RENDER — router
+   ============================================================ */
+function render() {
+  if (!state.setup) { $app.innerHTML = renderOnboarding(); return; }
+  const views = {
+    overview: renderOverview, timeline: renderTimeline, vendors: renderVendors,
+    budget: renderBudget, payments: renderPayments, rsvp: renderRSVP, seating: renderSeating
+  };
+  const fn = views[state.view] || renderOverview;
+  $app.innerHTML = renderHeader() + fn() + renderFooter();
+}
+
+function renderHeader() {
+  const tabs = [
+    ["overview", "Home"], ["timeline", "Timeline"], ["vendors", "Vendors"],
+    ["budget", "Budget"], ["payments", "Payments"], ["rsvp", "RSVPs"], ["seating", "Seating"]
+  ];
+  return `
+    <header style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+      <div class="display" style="font-size:24px">Ever After</div>
+      <div class="eyebrow" style="flex:1">${esc(state.setup.names)} · ${niceDate(weddingDate())}</div>
+      <button class="btn btn-ghost btn-small" data-action="edit-setup">Edit details</button>
+    </header>
+    <nav class="tabs">
+      ${tabs.map(([id, label]) =>
+        `<button data-action="nav" data-view="${id}" class="${state.view === id ? "active" : ""}">${label}</button>`).join("")}
+    </nav>`;
+}
+
+function renderFooter() {
+  return `
+    <footer class="app-foot">
+      <div class="flourish">❦</div>
+      <div>Everything here is saved privately in this browser — close the tab and come back anytime.</div>
+      <div class="foot-actions">
+        <button class="btn btn-ghost btn-small" data-action="export">Download a backup</button>
+        <button class="btn btn-ghost btn-small" data-action="import">Restore a backup</button>
+        <button class="btn btn-ghost btn-small" data-action="reset">Start over</button>
+      </div>
+    </footer>`;
+}
+
+/* ---------- onboarding ---------- */
+function renderOnboarding(prefill) {
+  const s = prefill || { names: "", date: "", venueType: "garden", budget: "", guestCount: "", keywords: ["", "", ""] };
+  const editing = !!prefill;
+  return `
+  <div class="onboard">
+    <div class="onboard-head">
+      <div class="flourish">❦ ❦ ❦</div>
+      <h1>Ever After</h1>
+      <p class="lede">${editing ? "Update the details — your progress stays right where you left it." :
+        "Tell us about the day you're dreaming of, and we'll draw up the whole map."}</p>
+    </div>
+    <form class="card" id="setupForm" style="padding:28px">
+      <div class="field">
+        <label class="field-label" for="f-names">Your names</label>
+        <input type="text" id="f-names" required placeholder="Evie &amp; Sam" value="${esc(s.names)}">
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label" for="f-date">Wedding date</label>
+          <input type="date" id="f-date" required value="${esc(s.date)}">
+        </div>
+        <div class="field">
+          <label class="field-label" for="f-venue">Venue type</label>
+          <select id="f-venue">
+            ${Object.entries(VENUE_TYPES).map(([k, v]) =>
+              `<option value="${k}" ${s.venueType === k ? "selected" : ""}>${v.label}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label" for="f-budget">Total budget (USD)</label>
+          <input type="number" id="f-budget" required min="1000" step="500" placeholder="35000" value="${esc(s.budget)}">
+        </div>
+        <div class="field">
+          <label class="field-label" for="f-guests">Guest count (about)</label>
+          <input type="number" id="f-guests" required min="2" placeholder="120" value="${esc(s.guestCount)}">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Three words for the feeling you want</label>
+        <div class="keyword-row">
+          <input type="text" id="f-kw1" required placeholder="romantic" value="${esc(s.keywords[0])}">
+          <input type="text" id="f-kw2" required placeholder="candlelit" value="${esc(s.keywords[1])}">
+          <input type="text" id="f-kw3" required placeholder="unhurried" value="${esc(s.keywords[2])}">
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:10px">
+        <button type="submit" class="btn btn-primary" style="padding:12px 34px;font-size:15px">
+          ${editing ? "Save changes" : "Begin the plan"}
+        </button>
+        ${editing ? `<button type="button" class="btn btn-ghost" data-action="cancel-edit" style="margin-left:8px">Cancel</button>` : ""}
+      </div>
+    </form>
+  </div>`;
+}
+
+/* ---------- overview ---------- */
+function renderOverview() {
+  const d = daysUntil();
+  const names = firstNames();
+  const plan = timelinePlan();
+  const allTasks = plan.flatMap(m => m.weeks);
+  const doneCount = allTasks.filter(t => state.tasksDone[t.id]).length;
+  const pct = allTasks.length ? Math.round(doneCount / allTasks.length * 100) : 0;
+  const nextTasks = allTasks.filter(t => !state.tasksDone[t.id]).slice(0, 3);
+  const nextPay = allPayments().find(p => !state.paymentsPaid[p.id] && p.due >= new Date());
+  const attending = state.guests.filter(g => g.status === "attending").reduce((n, g) => n + g.party, 0);
+  const awaiting = state.guests.filter(g => g.status === "awaiting").length;
+  const countdownLine =
+    d > 1 ? `<span class="countdown num tabular">${d.toLocaleString()}</span><div class="lede">days until you say “I do”</div>` :
+    d === 1 ? `<span class="countdown">Tomorrow</span><div class="lede">is the day. Deep breath.</div>` :
+    d === 0 ? `<span class="countdown">Today!</span><div class="lede">Go get married. We'll keep the lights on here.</div>` :
+    `<span class="countdown">Married!</span><div class="lede">${Math.abs(d).toLocaleString()} days of happily ever after, and counting.</div>`;
+  return `
+  <section class="hero">
+    <div class="eyebrow">${niceDate(weddingDate())} · ${VENUE_TYPES[state.setup.venueType].label}</div>
+    <h1 class="names">${names.map(esc).join('<span class="amp">&amp;</span>')}</h1>
+    <div style="margin-top:16px">${countdownLine}</div>
+    <div class="kw-chips">${state.setup.keywords.map(k => `<span class="chip">${esc(k)}</span>`).join("")}</div>
+  </section>
+
+  <div class="card" style="margin-top:8px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <h3>How the plan is coming along</h3>
+      <span class="num tabular" style="font-family:var(--font-sans);font-size:13px;color:var(--ink-2)">
+        ${doneCount} of ${allTasks.length} tasks · ${pct}%</span>
+    </div>
+    <div class="meter" style="margin-top:10px"><span style="width:${pct}%"></span></div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px">Up next on the timeline</div>
+      ${nextTasks.length ? `<ul class="snap-list">${nextTasks.map(t =>
+        `<li><span style="color:var(--gold)">✦</span><span>${t.text}</span></li>`).join("")}</ul>` :
+        `<p class="empty-note">Every single task is checked off. Extraordinary.</p>`}
+      <button class="btn btn-small" data-action="nav" data-view="timeline" style="margin-top:12px">Open the timeline</button>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px">Money & guests, at a glance</div>
+      <ul class="snap-list">
+        <li><span style="color:var(--gold)">✦</span><span>${nextPay ?
+          `Next payment: <b>${esc(nextPay.title)}</b> — <span class="num tabular">${money(nextPay.amount)}</span> due ${niceDate(nextPay.due)}` :
+          "No upcoming payments on the tracker."}</span></li>
+        <li><span style="color:var(--gold)">✦</span><span><span class="num tabular">${attending}</span> guests attending so far${awaiting ? `, <span class="num tabular">${awaiting}</span> ${awaiting === 1 ? "invitation" : "invitations"} awaiting a reply` : ""} — planning for about <span class="num tabular">${esc(state.setup.guestCount)}</span>.</span></li>
+        <li><span style="color:var(--gold)">✦</span><span>Budget of <span class="num tabular">${money(state.setup.budget)}</span>, thoughtfully divided on the Budget tab.</span></li>
+      </ul>
+    </div>
+  </div>`;
+}
+
+/* ---------- timeline ---------- */
+function renderTimeline() {
+  const plan = timelinePlan();
+  const today = new Date();
+  return `
+  <div class="section-intro">
+    <h2>Your twelve months, one gentle week at a time</h2>
+    <p class="lede">Built around ${niceDate(weddingDate())} at a ${VENUE_TYPES[state.setup.venueType].label.toLowerCase()} —
+    with room left for the ${esc(kw(0))}, ${esc(kw(1))}, ${esc(kw(2))} day you're making.</p>
+  </div>
+  ${plan.map(mo => {
+    const done = mo.weeks.filter(w => state.tasksDone[w.id]).length;
+    const allDone = done === mo.weeks.length;
+    const isPast = mo.m > 0 && monthsBefore(mo.m - 1) < today;
+    const isCurrent = !isPast && monthsBefore(mo.m) <= today;
+    const open = state.openMonths[mo.m] !== undefined ? state.openMonths[mo.m] : isCurrent;
+    return `
+    <div class="month-block ${allDone ? "month-done" : ""}">
+      <div class="month-dot"></div>
+      <div class="month-head" data-action="toggle-month" data-m="${mo.m}">
+        <span class="month-when">${mo.when}</span>
+        <h3>${mo.title}</h3>
+        <span class="num tabular" style="font-family:var(--font-sans);font-size:12px;color:var(--ink-3)">
+          ${mo.cal} · ${done}/${mo.weeks.length}</span>
+        ${isPast && !allDone ? `<span class="tag tag-warn">⚠ catch up</span>` : ""}
+        ${isCurrent ? `<span class="tag tag-good">✦ this month</span>` : ""}
+      </div>
+      ${open ? `
+      <p class="month-blurb">${mo.blurb}</p>
+      <div class="month-tasks">
+        ${mo.weeks.map(w => `
+          <div class="task ${state.tasksDone[w.id] ? "done" : ""}">
+            <span class="wk">${w.wk}</span>
+            <input type="checkbox" id="t-${w.id}" data-action="task" data-id="${w.id}" ${state.tasksDone[w.id] ? "checked" : ""}>
+            <label class="tx" for="t-${w.id}">${w.text}</label>
+          </div>`).join("")}
+      </div>` : ""}
+    </div>`;
+  }).join("")}`;
+}
+
+/* ---------- vendors ---------- */
+function renderVendors() {
+  return `
+  <div class="section-intro">
+    <h2>Your vendor interview companion</h2>
+    <p class="lede">The questions that separate a lovely first meeting from a booking you'll never regret.
+    Check them off as you ask; jot what you learn.</p>
+  </div>
+  ${VENDORS.map(v => {
+    const meta = state.vendors[v.id] || { status: "researching", notes: "" };
+    const open = !!state.openVendors[v.id];
+    const asked = v.qs.filter((_, i) => state.vendorChecks[`${v.id}.${i}`]).length;
+    const statusTag = { researching: ["tag-muted", "Researching"], contacted: ["tag-warn", "In conversation"], booked: ["tag-good", "✓ Booked"] }[meta.status] || ["tag-muted", "Researching"];
+    return `
+    <div class="card vendor-card">
+      <div class="vendor-head" data-action="toggle-vendor" data-id="${v.id}">
+        <span style="font-size:22px">${v.icon}</span>
+        <h3>${v.name}</h3>
+        <span class="tag ${statusTag[0]}">${statusTag[1]}</span>
+        <span class="num tabular" style="font-family:var(--font-sans);font-size:12px;color:var(--ink-3)">${asked}/${v.qs.length} asked</span>
+      </div>
+      ${open ? `
+      <div class="vendor-status" style="margin-top:12px">
+        <label class="field-label" for="vs-${v.id}">Where things stand</label>
+        <select id="vs-${v.id}" data-action="vendor-status" data-id="${v.id}">
+          <option value="researching" ${meta.status === "researching" ? "selected" : ""}>Still researching</option>
+          <option value="contacted" ${meta.status === "contacted" ? "selected" : ""}>In conversation</option>
+          <option value="booked" ${meta.status === "booked" ? "selected" : ""}>Booked!</option>
+        </select>
+      </div>
+      <ul class="q-list">
+        ${v.qs.map((q, i) => {
+          const ck = state.vendorChecks[`${v.id}.${i}`];
+          return `<li class="${ck ? "done" : ""}">
+            <input type="checkbox" id="q-${v.id}-${i}" data-action="vendor-q" data-id="${v.id}.${i}" ${ck ? "checked" : ""}>
+            <label for="q-${v.id}-${i}">${q}</label>
+          </li>`;
+        }).join("")}
+      </ul>
+      <div class="vendor-notes">
+        <label class="field-label" for="vn-${v.id}">Notes, names & quotes</label>
+        <textarea id="vn-${v.id}" data-action="vendor-notes" data-id="${v.id}"
+          placeholder="Who you talked to, what they quoted, how it felt…">${esc(meta.notes)}</textarea>
+      </div>` : ""}
+    </div>`;
+  }).join("")}`;
+}
+
+/* ---------- budget ---------- */
+function renderBudget() {
+  const plan = budgetPlan();
+  const total = Number(state.setup.budget) || 0;
+  const spentTotal = plan.reduce((n, c) => n + (Number(state.budgetSpent[c.id]) || 0), 0);
+  const maxAmt = Math.max(...plan.map(c => c.amount), 1);
+  return `
+  <div class="section-intro">
+    <h2>Where the ${money(total)} goes</h2>
+    <p class="lede">A starting allocation shaped for a ${VENUE_TYPES[state.setup.venueType].label.toLowerCase()} wedding.
+    Log what you've actually spent or committed, and watch each envelope fill.</p>
+  </div>
+  <div class="card viz-root" data-viz="budget">
+    <div class="budget-summary">
+      <div class="stat-tile"><div class="v tabular">${money(total)}</div><div class="l">Total budget</div></div>
+      <div class="stat-tile"><div class="v tabular" style="color:var(--accent-ink)">${money(spentTotal)}</div><div class="l">Spent / committed</div></div>
+      <div class="stat-tile"><div class="v tabular" style="color:${total - spentTotal < 0 ? "var(--critical)" : "inherit"}">${money(total - spentTotal)}</div><div class="l">Still yours</div></div>
+    </div>
+    <hr class="divider">
+    ${plan.map(c => {
+      const spent = Number(state.budgetSpent[c.id]) || 0;
+      const laneW = (c.amount / maxAmt * 100).toFixed(1);
+      const fillW = c.amount > 0 ? Math.min(100, spent / c.amount * 100).toFixed(1) : 0;
+      const over = spent > c.amount;
+      return `
+      <div class="budget-row" data-tip="${esc(c.name)} — allocated ${money(c.amount)} (${c.pct}%), spent ${money(spent)}, ${over ? money(spent - c.amount) + " over" : money(c.amount - spent) + " left"}">
+        <div class="budget-row-top">
+          <span class="budget-cat">${c.name} <span style="font-family:var(--font-sans);font-size:11.5px;color:var(--ink-3)">${c.pct}%</span></span>
+          <span class="budget-figs tabular"><b>${money(c.amount)}</b> planned${spent ? ` · ${money(spent)} spent` : ""}
+            ${over ? ` <span class="tag tag-critical">⚠ over</span>` : ""}</span>
+        </div>
+        <div class="budget-bar-lane">
+          <div class="budget-lane-track">
+            <div class="budget-bar" style="width:${laneW}%;min-width:40px">
+              <span class="fill" style="width:${fillW}%"></span>
+            </div>
+          </div>
+          <input type="number" class="budget-spent-input tabular" min="0" step="50" placeholder="spent $"
+            value="${spent || ""}" data-action="budget-spent" data-id="${c.id}" aria-label="Amount spent on ${esc(c.name)}">
+        </div>
+      </div>`;
+    }).join("")}
+    <p style="margin-top:14px;font-family:var(--font-sans);font-size:12px;color:var(--ink-3)">
+      Bar length shows each category's share of the plan; the deeper fill is what you've spent of it.</p>
+  </div>`;
+}
+
+/* ---------- payments ---------- */
+function renderPayments() {
+  const now = new Date();
+  const soon = new Date(); soon.setDate(soon.getDate() + 30);
+  const items = allPayments();
+  const unpaidTotal = items.filter(p => !state.paymentsPaid[p.id]).reduce((n, p) => n + p.amount, 0);
+  return `
+  <div class="section-intro">
+    <h2>Payment deadlines, minus the dread</h2>
+    <p class="lede">Typical deposit and balance dates for your day, sized from your budget.
+    Adjust to match your real contracts, and add anything we missed.</p>
+  </div>
+  <div class="card">
+    <div class="budget-summary">
+      <div class="stat-tile"><div class="v tabular">${money(unpaidTotal)}</div><div class="l">Still to pay</div></div>
+      <div class="stat-tile"><div class="v tabular">${items.filter(p => state.paymentsPaid[p.id]).length} / ${items.length}</div><div class="l">Payments made</div></div>
+    </div>
+    <hr class="divider">
+    ${items.map(p => {
+      const paid = !!state.paymentsPaid[p.id];
+      const overdue = !paid && p.due < now;
+      const dueSoon = !paid && !overdue && p.due <= soon;
+      return `
+      <div class="pay-row ${paid ? "paid" : ""}">
+        <input type="checkbox" data-action="pay-toggle" data-id="${p.id}" ${paid ? "checked" : ""} aria-label="Mark ${esc(p.title)} paid">
+        <div class="pay-main">
+          <div class="pay-title">${esc(p.title)}</div>
+          <div class="pay-when">${niceDate(p.due)}
+            ${overdue ? ` <span class="tag tag-critical">✕ overdue</span>` : ""}
+            ${dueSoon ? ` <span class="tag tag-warn">◷ due soon</span>` : ""}
+            ${paid ? ` <span class="tag tag-good">✓ paid</span>` : ""}
+          </div>
+        </div>
+        <div class="pay-amt tabular">${money(p.amount)}</div>
+        ${p.generated ? "" : `<button class="x-btn" data-action="pay-remove" data-id="${p.id}" title="Remove">✕</button>`}
+      </div>`;
+    }).join("")}
+    <form class="add-inline" id="payForm">
+      <div><label class="field-label" for="pf-title">Payment</label><input type="text" id="pf-title" required placeholder="Calligrapher balance"></div>
+      <div><label class="field-label" for="pf-date">Due</label><input type="date" id="pf-date" required></div>
+      <div><label class="field-label" for="pf-amt">Amount</label><input type="number" id="pf-amt" required min="0" step="10" placeholder="250"></div>
+      <button type="submit" class="btn btn-primary btn-small" style="height:38px">Add</button>
+    </form>
+  </div>`;
+}
+
+/* ---------- rsvp ---------- */
+function renderRSVP() {
+  const g = state.guests;
+  const sum = st => g.filter(x => x.status === st).reduce((n, x) => n + x.party, 0);
+  const invited = g.reduce((n, x) => n + x.party, 0);
+  const groups = [...new Set(g.map(x => x.group).filter(Boolean))];
+  return `
+  <div class="section-intro">
+    <h2>Who's coming to the party</h2>
+    <p class="lede">Add each invitation as one entry (with its party size), then watch the yeses arrive.</p>
+  </div>
+  <div class="kpi-row">
+    <div class="card stat-tile"><div class="v tabular">${invited}</div><div class="l">Invited</div></div>
+    <div class="card stat-tile"><div class="v tabular" style="color:var(--good-text)">${sum("attending")}</div><div class="l">Attending</div></div>
+    <div class="card stat-tile"><div class="v tabular">${sum("awaiting")}</div><div class="l">Awaiting reply</div></div>
+    <div class="card stat-tile"><div class="v tabular" style="color:var(--ink-3)">${sum("declined")}</div><div class="l">Send love anyway</div></div>
+  </div>
+  <div class="card">
+    ${g.length ? g.map(x => `
+      <div class="guest-row">
+        <span class="guest-name">${esc(x.name)}
+          <span class="guest-meta">· party of ${x.party}${x.group ? ` · ${esc(x.group)}` : ""}</span></span>
+        <select data-action="guest-status" data-id="${x.id}">
+          <option value="awaiting" ${x.status === "awaiting" ? "selected" : ""}>Awaiting reply</option>
+          <option value="attending" ${x.status === "attending" ? "selected" : ""}>Attending ✓</option>
+          <option value="declined" ${x.status === "declined" ? "selected" : ""}>Declined</option>
+        </select>
+        <button class="x-btn" data-action="guest-remove" data-id="${x.id}" title="Remove guest">✕</button>
+      </div>`).join("") :
+      `<p class="empty-note">No guests yet — add your first invitation below. (You're planning for about ${esc(state.setup.guestCount)}.)</p>`}
+    <form class="add-guest" id="guestForm">
+      <div><label class="field-label" for="gf-name">Guest / household</label><input type="text" id="gf-name" required placeholder="The Ramirez family"></div>
+      <div><label class="field-label" for="gf-party">Party</label><input type="number" id="gf-party" min="1" value="1" required></div>
+      <div><label class="field-label" for="gf-group">Relationship group</label>
+        <input type="text" id="gf-group" list="groupList" placeholder="College friends">
+        <datalist id="groupList">
+          ${["Her family", "His family", "College friends", "Work friends", "Childhood friends", "Neighbors", ...groups]
+            .filter((v, i, a) => a.indexOf(v) === i).map(x => `<option value="${esc(x)}">`).join("")}
+        </datalist>
+      </div>
+      <div><label class="field-label" for="gf-status">Status</label>
+        <select id="gf-status"><option value="awaiting">Awaiting</option><option value="attending">Attending</option><option value="declined">Declined</option></select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-small" style="height:38px">Add</button>
+    </form>
+  </div>`;
+}
+
+/* ---------- seating ---------- */
+function renderSeating() {
+  const seatable = seatableGuests();
+  const seatedIds = new Set(state.tables.flatMap(t => t.seats));
+  const unseated = seatable.filter(g => !seatedIds.has(g.id));
+  const names = id => guestById(id)?.name || "?";
+  return `
+  <div class="section-intro">
+    <h2>The seating chart, without the migraine</h2>
+    <p class="lede">Guests who share a relationship group are seated together; anyone you mark
+    “seat apart” will never share a table. Auto-arrange does the diplomacy, you get the credit.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-primary" data-action="auto-arrange">✦ Auto-arrange the room</button>
+      <button class="btn" data-action="add-table">+ Add a table</button>
+      <button class="btn btn-ghost btn-small" data-action="clear-seats">Clear all seats</button>
+      <span style="font-family:var(--font-sans);font-size:12.5px;color:var(--ink-3)">
+        Seating everyone who hasn't declined (${seatable.reduce((n, g) => n + g.party, 0)} seats needed).</span>
+    </div>
+    <hr class="divider">
+    <div class="eyebrow" style="margin-bottom:6px">Keep these two apart</div>
+    ${state.conflicts.map(([a, b], i) => `
+      <div class="conflict-row" style="margin-top:4px">
+        <span>${esc(names(a))} <span style="color:var(--ink-3)">×</span> ${esc(names(b))}</span>
+        <button class="x-btn" data-action="conflict-remove" data-i="${i}" title="Remove rule">✕</button>
+      </div>`).join("")}
+    ${state.guests.length >= 2 ? `
+    <div class="conflict-row">
+      <select id="cfA">${state.guests.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select>
+      <span style="color:var(--ink-3)">shouldn't sit with</span>
+      <select id="cfB">${state.guests.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select>
+      <button class="btn btn-small" data-action="conflict-add">Add rule</button>
+    </div>` : `<p class="empty-note">Add at least two guests on the RSVP tab to set “seat apart” rules.</p>`}
+  </div>
+
+  ${unseated.length ? `
+  <div class="card" style="margin-bottom:16px">
+    <div class="eyebrow" style="margin-bottom:8px">Waiting for a seat (${unseated.length})</div>
+    ${unseated.map(x => `
+      <span class="unassigned-chip">${esc(x.name)}<span class="guest-meta">(${x.party})</span>
+        <select data-action="assign" data-id="${x.id}">
+          <option value="">table…</option>
+          ${state.tables.map(t => `<option value="${t.id}" ${tableFree(t) < x.party ? "disabled" : ""}>${esc(t.name)} (${tableFree(t)} free)</option>`).join("")}
+        </select>
+      </span>`).join("")}
+  </div>` : (seatable.length ? `<p class="empty-note" style="padding:0 4px 10px">Everyone has a seat. The room is set. ✦</p>` : "")}
+
+  ${state.tables.length ? `
+  <div class="tables-grid">
+    ${state.tables.map(t => {
+      const free = tableFree(t);
+      return `
+      <div class="table-card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <h4 contenteditable="true" data-action-blur="table-name" data-id="${t.id}" spellcheck="false">${esc(t.name)}</h4>
+          <button class="x-btn" data-action="table-remove" data-id="${t.id}" title="Remove table">✕</button>
+        </div>
+        <div class="table-cap">
+          <input type="number" min="1" max="20" value="${t.capacity}" data-action="table-cap" data-id="${t.id}"
+            style="width:52px;padding:2px 6px;font-size:12px" aria-label="Capacity of ${esc(t.name)}"> seats ·
+          <span class="tabular">${t.capacity - free}</span> filled
+        </div>
+        <ul class="seat-list">
+          ${t.seats.map(id => {
+            const g = guestById(id); if (!g) return "";
+            return `<li><span>${esc(g.name)} <span class="seat-group">${esc(g.group || "")}${g.party > 1 ? ` · ${g.party} seats` : ""}</span></span>
+              <button class="x-btn" data-action="unseat" data-id="${id}" title="Remove from table">✕</button></li>`;
+          }).join("")}
+          ${!t.seats.length ? `<li style="color:var(--ink-3);font-style:italic;border-top:none">empty for now</li>` : ""}
+        </ul>
+      </div>`;
+    }).join("")}
+  </div>` : `<p class="empty-note">No tables yet — “Auto-arrange” will create them, or add one yourself.</p>`}`;
+}
+
+/* ============================================================
+   EVENTS — one delegated listener each for click / change / submit
+   ============================================================ */
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const a = el.dataset.action;
+  if (a === "nav") { state.view = el.dataset.view; save(); render(); }
+  else if (a === "edit-setup") { $app.innerHTML = renderOnboarding(state.setup); }
+  else if (a === "cancel-edit") { render(); }
+  else if (a === "toggle-month") {
+    if (e.target.closest("input,label")) return;
+    const m = el.dataset.m;
+    const plan = timelinePlan(); const mo = plan.find(x => String(x.m) === m);
+    const isCurrent = mo && monthsBefore(mo.m) <= new Date() && !(mo.m > 0 && monthsBefore(mo.m - 1) < new Date());
+    const cur = state.openMonths[m] !== undefined ? state.openMonths[m] : isCurrent;
+    state.openMonths[m] = !cur; save(); render();
+  }
+  else if (a === "toggle-vendor") {
+    if (e.target.closest("select,input,textarea")) return;
+    state.openVendors[el.dataset.id] = !state.openVendors[el.dataset.id]; save(); render();
+  }
+  else if (a === "pay-remove") {
+    state.customPayments = state.customPayments.filter(p => p.id !== el.dataset.id);
+    delete state.paymentsPaid[el.dataset.id]; save(); render();
+  }
+  else if (a === "guest-remove") {
+    const id = el.dataset.id;
+    state.guests = state.guests.filter(g => g.id !== id);
+    state.conflicts = state.conflicts.filter(([x, y]) => x !== id && y !== id);
+    state.tables.forEach(t => t.seats = t.seats.filter(s => s !== id));
+    save(); render();
+  }
+  else if (a === "auto-arrange") { autoArrange(); render(); }
+  else if (a === "add-table") {
+    state.tables.push({ id: uid(), name: `Table ${state.tables.length + 1}`, capacity: 8, seats: [] });
+    save(); render();
+  }
+  else if (a === "clear-seats") { state.tables.forEach(t => t.seats = []); save(); render(); }
+  else if (a === "table-remove") {
+    state.tables = state.tables.filter(t => t.id !== el.dataset.id); save(); render();
+  }
+  else if (a === "unseat") {
+    state.tables.forEach(t => t.seats = t.seats.filter(s => s !== el.dataset.id)); save(); render();
+  }
+  else if (a === "conflict-add") {
+    const A = document.getElementById("cfA").value, B = document.getElementById("cfB").value;
+    if (A && B && A !== B && !state.conflicts.some(([x, y]) => (x === A && y === B) || (x === B && y === A))) {
+      state.conflicts.push([A, B]);
+      // If they're currently at the same table, unseat the second.
+      state.tables.forEach(t => { if (t.seats.includes(A) && t.seats.includes(B)) t.seats = t.seats.filter(s => s !== B); });
+      save(); render();
+    }
+  }
+  else if (a === "conflict-remove") {
+    state.conflicts.splice(Number(el.dataset.i), 1); save(); render();
+  }
+  else if (a === "export") {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const aEl = document.createElement("a");
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = "ever-after-backup.json";
+    aEl.click(); URL.revokeObjectURL(aEl.href);
+  }
+  else if (a === "import") {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = "application/json";
+    inp.onchange = () => {
+      const f = inp.files[0]; if (!f) return;
+      f.text().then(txt => {
+        try {
+          const data = JSON.parse(txt);
+          if (!data.setup) throw new Error("not a backup");
+          state = Object.assign(blankState(), data); save(); render();
+        } catch { alert("That file doesn't look like an Ever After backup."); }
+      });
+    };
+    inp.click();
+  }
+  else if (a === "reset") {
+    if (confirm("Start completely over? This erases everything saved in this browser.")) {
+      state = blankState(); save(); render();
+    }
+  }
+});
+
+document.addEventListener("change", e => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const a = el.dataset.action;
+  if (a === "task") { state.tasksDone[el.dataset.id] = el.checked; save(); render(); }
+  else if (a === "vendor-q") { state.vendorChecks[el.dataset.id] = el.checked; save(); render(); }
+  else if (a === "vendor-status") {
+    const v = state.vendors[el.dataset.id] || { status: "researching", notes: "" };
+    v.status = el.value; state.vendors[el.dataset.id] = v; save(); render();
+  }
+  else if (a === "vendor-notes") {
+    const v = state.vendors[el.dataset.id] || { status: "researching", notes: "" };
+    v.notes = el.value; state.vendors[el.dataset.id] = v; save();
+  }
+  else if (a === "budget-spent") {
+    state.budgetSpent[el.dataset.id] = Number(el.value) || 0; save(); render();
+  }
+  else if (a === "pay-toggle") { state.paymentsPaid[el.dataset.id] = el.checked; save(); render(); }
+  else if (a === "guest-status") {
+    const g = guestById(el.dataset.id);
+    if (g) {
+      g.status = el.value;
+      if (g.status === "declined") state.tables.forEach(t => t.seats = t.seats.filter(s => s !== g.id));
+      save(); render();
+    }
+  }
+  else if (a === "assign") {
+    const t = state.tables.find(x => x.id === el.value);
+    const g = guestById(el.dataset.id);
+    if (t && g && tableFree(t) >= g.party && !hasConflict(g.id, t.seats)) {
+      t.seats.push(g.id); save(); render();
+    } else if (t && g && hasConflict(g.id, t.seats)) {
+      alert(`${g.name} has a “seat apart” rule with someone at ${t.name}.`); render();
+    }
+  }
+  else if (a === "table-cap") {
+    const t = state.tables.find(x => x.id === el.dataset.id);
+    if (t) { t.capacity = Math.max(1, Number(el.value) || 8); save(); render(); }
+  }
+});
+
+// contenteditable table names save on blur
+document.addEventListener("blur", e => {
+  const el = e.target.closest ? e.target.closest("[data-action-blur='table-name']") : null;
+  if (!el) return;
+  const t = state.tables.find(x => x.id === el.dataset.id);
+  if (t) { t.name = el.textContent.trim() || t.name; el.textContent = t.name; save(); }
+}, true);
+
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  if (e.target.id === "setupForm") {
+    const get = id => document.getElementById(id).value.trim();
+    state.setup = {
+      names: get("f-names"),
+      date: get("f-date"),
+      venueType: get("f-venue"),
+      budget: Number(get("f-budget")),
+      guestCount: Number(get("f-guests")),
+      keywords: [get("f-kw1"), get("f-kw2"), get("f-kw3")].map(k => k.toLowerCase())
+    };
+    state.view = "overview"; save(); render();
+    window.scrollTo(0, 0);
+  }
+  else if (e.target.id === "payForm") {
+    state.customPayments.push({
+      id: uid(),
+      title: document.getElementById("pf-title").value.trim(),
+      due: document.getElementById("pf-date").value,
+      amount: Number(document.getElementById("pf-amt").value) || 0
+    });
+    save(); render();
+  }
+  else if (e.target.id === "guestForm") {
+    state.guests.push({
+      id: uid(),
+      name: document.getElementById("gf-name").value.trim(),
+      party: Math.max(1, Number(document.getElementById("gf-party").value) || 1),
+      group: document.getElementById("gf-group").value.trim(),
+      status: document.getElementById("gf-status").value
+    });
+    save(); render();
+  }
+});
+
+/* budget hover tooltip */
+document.addEventListener("mousemove", e => {
+  const row = e.target.closest ? e.target.closest("[data-tip]") : null;
+  if (row && !e.target.closest("input")) {
+    $tip.textContent = row.dataset.tip;
+    $tip.style.display = "block";
+    const x = Math.min(e.pageX + 14, document.documentElement.scrollWidth - 260);
+    $tip.style.left = x + "px";
+    $tip.style.top = (e.pageY + 16) + "px";
+  } else {
+    $tip.style.display = "none";
+  }
+});
+
+render();
+</script>
+</body>
+</html>
