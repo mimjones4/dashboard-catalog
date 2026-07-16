@@ -28,26 +28,34 @@
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+/* Dark tokens live in one place and are applied by three selectors:
+   the OS preference, and the explicit data-theme toggle (which must win
+   in both directions when a viewer flips the switch). */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #211f1c;
-    --bg-raised: #2b2925;
-    --bg-soft: #262421;
-    --ink: #e8e3d9;
-    --ink-soft: #b1aa9c;
-    --ink-faint: #857e70;
-    --accent: #8fae95;
-    --accent-deep: #a9c4ae;
-    --accent-soft: #33403a;
-    --warm: #dd9b81;
-    --warm-soft: #453229;
-    --gold: #d9b26a;
-    --gold-soft: #403829;
-    --love: #d38fa2;
-    --love-soft: #422f35;
-    --line: #3a3731;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-  }
+  :root { --bg: #211f1c; --bg-raised: #2b2925; --bg-soft: #262421;
+    --ink: #e8e3d9; --ink-soft: #b1aa9c; --ink-faint: #857e70;
+    --accent: #8fae95; --accent-deep: #a9c4ae; --accent-soft: #33403a;
+    --warm: #dd9b81; --warm-soft: #453229; --gold: #d9b26a; --gold-soft: #403829;
+    --love: #d38fa2; --love-soft: #422f35; --line: #3a3731;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.25); }
+}
+
+:root[data-theme="dark"] {
+  --bg: #211f1c; --bg-raised: #2b2925; --bg-soft: #262421;
+  --ink: #e8e3d9; --ink-soft: #b1aa9c; --ink-faint: #857e70;
+  --accent: #8fae95; --accent-deep: #a9c4ae; --accent-soft: #33403a;
+  --warm: #dd9b81; --warm-soft: #453229; --gold: #d9b26a; --gold-soft: #403829;
+  --love: #d38fa2; --love-soft: #422f35; --line: #3a3731;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme="light"] {
+  --bg: #faf6ef; --bg-raised: #ffffff; --bg-soft: #f3ecdf;
+  --ink: #43403a; --ink-soft: #7a7468; --ink-faint: #a39c8e;
+  --accent: #7c9a82; --accent-deep: #5d7d64; --accent-soft: #e5eee7;
+  --warm: #d98e73; --warm-soft: #f8e8e0; --gold: #d9b26a; --gold-soft: #f7eeda;
+  --love: #c97b8e; --love-soft: #f7e7ec; --line: #eae3d6;
+  --shadow: 0 2px 10px rgba(90, 80, 60, 0.07), 0 1px 3px rgba(90, 80, 60, 0.05);
 }
 
 * { box-sizing: border-box; }

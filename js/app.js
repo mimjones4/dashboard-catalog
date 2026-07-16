@@ -16,6 +16,11 @@
 
   const $app = document.getElementById("app");
 
+  // localStorage can be unavailable or throw (private mode, sandboxed
+  // frames, quota). Fall back to an in-memory store so the app stays
+  // fully usable for the session either way.
+  const memStore = {};
+
   let state = {
     profile: loadJSON(STORE_KEY),   // { name, birthDate, dueDate, feeding, concerns[] }
     journal: loadJSON(LOG_KEY) || {}, // { "YYYY-MM-DD": { activityId: "tried" | "loved" } }
@@ -27,14 +32,24 @@
   function loadJSON(key) {
     try {
       const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : null;
+      return raw ? JSON.parse(raw) : (memStore[key] || null);
     } catch (e) {
-      return null;
+      return memStore[key] || null;
     }
   }
 
-  function saveProfile() { localStorage.setItem(STORE_KEY, JSON.stringify(state.profile)); }
-  function saveJournal() { localStorage.setItem(LOG_KEY, JSON.stringify(state.journal)); }
+  function saveJSON(key, value) {
+    memStore[key] = value;
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* memory-only */ }
+  }
+
+  function removeJSON(key) {
+    delete memStore[key];
+    try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+  }
+
+  function saveProfile() { saveJSON(STORE_KEY, state.profile); }
+  function saveJournal() { saveJSON(LOG_KEY, state.journal); }
 
   /* ---------------- dates & age ---------------- */
 
@@ -469,8 +484,8 @@
     `);
     danger.querySelector("#btn-reset").addEventListener("click", () => {
       if (confirm("This clears baby's profile and the whole journal from this device. There's no undo — start fresh?")) {
-        localStorage.removeItem(STORE_KEY);
-        localStorage.removeItem(LOG_KEY);
+        removeJSON(STORE_KEY);
+        removeJSON(LOG_KEY);
         state = { profile: null, journal: {}, tab: "today" };
         render();
       }
