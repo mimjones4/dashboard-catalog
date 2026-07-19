@@ -1,44 +1,50 @@
-# 🎙️ Mock Interview Simulator
+# 🎙️ MockMentor
 
-Practice the interview before it counts. Upload your resume (PDF or pasted text) and the full job description for the role you're targeting, and get:
+Realistic AI mock interviews tailored to your resume and the exact job you're targeting — with follow-up questions, honest question-by-question feedback, and (Phase 2) cross-session pattern tracking. Built on the Cloudflare stack.
 
-1. **Tailored analysis** — your experience, skills, and gaps extracted from the resume; the role's requirements, likely competencies, and red flags extracted from the job description.
-2. **A realistic mock interview** — 8–10 role-specific questions (a mix of behavioral, technical, and situational, tuned to what *this* job actually requires), asked one at a time. Answer by typing or speaking. When an answer is weak, the interviewer asks realistic follow-ups ("Can you give me a specific example?") — just like the real thing.
-3. **Structured feedback** — per question: strengths, weaknesses, and a sample stronger answer built from your real background; plus an overall summary and top priorities.
-4. **Cross-session pattern tracking** — sessions are saved in your browser, and after two or more mocks the app surfaces recurring patterns ("You've stumbled on conflict-resolution questions in 3 of your last 4 mocks — here's why, and how to fix it").
+Upload your resume (PDF or text) and paste the full job description. MockMentor extracts your experience, skills, and gaps and the role's requirements, competencies, and red flags, then conducts an 8–10 question interview one question at a time — mixing behavioral, technical, and situational questions, probing with follow-ups when an answer is weak ("Can you give me a specific example?"), and closing with structured feedback: per question, what worked, what fell short, and a stronger sample answer built from your real background. Tone throughout is professional but warm — a senior hiring manager who wants you to succeed.
 
-The interviewer's tone is professional but warm — a senior hiring manager who wants you to succeed.
+## Monetization
 
-## Setup
+- **First mock interview is free**, no account or login.
+- After that, a **one-time $5.99** (Stripe, live mode) unlocks unlimited interviews forever. No subscription — job hunting is a burst, so you pay once for your search.
+- The paywall also serves as bot-abuse protection (a payment wall removes the incentive to hammer the free API).
+- **AdSense** runs only on the static content pages (`/how-it-works.html`, `/tips/...`), never inside the app or a live interview. Those pages exist partly to give the site real written content, which AdSense expects.
 
-Requires Node.js 18+ and an Anthropic API key.
+## Architecture (Cloudflare)
 
-```bash
+- **Pages** — hosts the static frontend (`public/`) and the content pages.
+- **Pages Functions** (`functions/api/*`) — the backend:
+  - `analyze` — resume + JD → candidate/role analysis + question plan. **Paywall gate + rate-limit checkpoint.**
+  - `interview` — next interviewer turn from the running transcript (control flags: `question_number`, `is_followup`, `interview_complete`).
+  - `feedback` — full transcript → structured per-question + overall feedback.
+  - `status` / `checkout` / `confirm` / `stripe-webhook` — the paywall: read unlock state, start Stripe Checkout, confirm on return, and durably unlock via signed webhook.
+- **D1** — one `users` table keyed by an anonymous browser UUID, tracking free-session usage and unlock status. (Phase 2 adds a `sessions` history table for pattern tracking.)
+- **Claude Opus 4.8** via the Anthropic Messages API (called with `fetch` from the Worker, structured outputs, adaptive thinking). The API key is a Worker secret and never reaches the client.
+
+Shared logic lives in `shared/` (ESM modules imported by the Functions): `claude.js`, `prompts.js`, `schemas.js`, `db.js`, `stripe.js`, `http.js`.
+
+## Local development
+
+```sh
 npm install
-export ANTHROPIC_API_KEY=sk-ant-...   # or use `ant auth login`
-npm start
+npm run db:init:local          # create the D1 table locally
+# set secrets for local dev in a .dev.vars file (gitignored):
+#   ANTHROPIC_API_KEY=sk-ant-...
+#   STRIPE_SECRET_KEY=sk_test_...    (test mode is fine locally)
+#   STRIPE_PRICE_ID=price_...        (a test-mode price)
+#   STRIPE_WEBHOOK_SECRET=whsec_...
+npm run dev                    # wrangler pages dev at http://localhost:8788
 ```
 
-Then open **http://localhost:3000**.
+The interview loop works with just `ANTHROPIC_API_KEY`; the Stripe vars are only needed to exercise the paywall.
 
-Optional environment variables:
+## Deploy
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | — | Claude API key (the SDK also accepts `ANTHROPIC_AUTH_TOKEN` or an `ant auth login` profile) |
-| `CLAUDE_MODEL` | `claude-opus-4-8` | Model used for all stages |
-| `PORT` | `3000` | HTTP port |
+See **[DEPLOY.md](./DEPLOY.md)** for the full runbook: create D1, create the **live-mode** Stripe product/price and webhook, set secrets, configure rate limiting, deploy, and smoke-test.
 
-## How it works
+## Roadmap
 
-- **Server** (`server.js`): a small Express app that keeps your API key server-side and exposes four endpoints, each backed by a Claude call with structured outputs (`output_config.format`) so the UI always gets well-formed JSON:
-  - `POST /api/analyze` — resume (PDF sent to Claude as a native base64 document block, or plain text) + job description → candidate profile, role profile, and an 8–10 question interview plan.
-  - `POST /api/interview` — the interview loop. The client sends the running transcript; Claude, acting as the hiring manager, returns the next question or follow-up plus control flags (`question_number`, `is_followup`, `interview_complete`).
-  - `POST /api/feedback` — full transcript → per-question strengths/weaknesses/stronger-answer feedback and an overall summary.
-  - `POST /api/patterns` — compact summaries of past sessions → recurring patterns with evidence, root cause, and a concrete fix.
-- **Client** (`public/`): vanilla JS single-page app. Voice answers use the browser's Web Speech API (Chrome/Edge). Completed sessions are stored in `localStorage` — nothing about your resume or answers is persisted on the server, and the server itself is stateless.
-
-## Privacy notes
-
-- Resume and transcript data are sent to the Anthropic API for processing and to your local server, but are not stored server-side.
-- Cross-session history lives entirely in your browser's `localStorage`; delete individual sessions from the **My Progress** page.
+- **Phase 1 (this repo):** core loop — resume/JD analysis, 8–10 tailored questions one at a time, follow-ups, structured feedback — plus the free-then-$5.99 paywall (D1 + Stripe), rate limiting, and content pages. Voice input (Web Speech API, text-default fallback) is carried over from the prototype and already works.
+- **Phase 2:** cross-session pattern tracking — persist completed sessions in D1 and surface recurring weaknesses ("you've stumbled on conflict-resolution questions in 3 of your last 4 mocks — here's why and how to fix it").
+- **Phase 3:** harden voice input (questions read aloud + spoken answers), Chrome-primary, text always the fallback.

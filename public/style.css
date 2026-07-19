@@ -354,3 +354,138 @@ details.qcard .qbody { padding: 0 20px 18px; border-top: 1px solid var(--line); 
   animation: spin 0.9s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ Phase 1 additions: nav, paywall modal, content pages ============ */
+
+a.brand { text-decoration: none; color: var(--ink); }
+.nav-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.nav-link:hover { background: var(--accent-soft); color: var(--ink); }
+.pill {
+  background: var(--good-soft);
+  color: var(--good);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 28, 45, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 20px;
+}
+.modal {
+  max-width: 460px;
+  width: 100%;
+  position: relative;
+}
+.modal h2 { margin-top: 0; }
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--ink); }
+.perks { list-style: none; padding: 0; margin: 14px 0; }
+.perks li {
+  padding: 6px 0 6px 26px;
+  position: relative;
+}
+.perks li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--good);
+  font-weight: 700;
+}
+.perks .soon { color: var(--ink-soft); font-size: 0.82rem; font-style: italic; }
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 20px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* ============ Content pages (how-it-works, tips) ============ */
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 72px;
+}
+.content h1 { font-size: 2rem; margin-bottom: 6px; }
+.content .lede { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 28px; }
+.content h2 { margin-top: 32px; }
+.content p, .content li { color: var(--ink); }
+.content ul, .content ol { padding-left: 22px; }
+.content li { margin-bottom: 8px; }
+.content .cta {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+  padding: 12px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+.content .cta:hover { filter: brightness(1.08); }
+.article-list { list-style: none; padding: 0; }
+.article-list li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+.article-list a {
+  display: block;
+  padding: 18px 22px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.article-list a:hover { background: var(--accent-soft); }
+.article-list .title { font-weight: 600; font-size: 1.05rem; }
+.article-list .blurb { color: var(--ink-soft); font-size: 0.92rem; margin-top: 4px; }
+.breadcrumb { margin-bottom: 18px; font-size: 0.9rem; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+
+/* Reserved AdSense slot — content pages only, never inside the interview.
+   Renders as empty reserved space until a publisher id is configured. */
+.ad-slot {
+  display: block;
+  min-height: 100px;
+  margin: 28px 0;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: repeating-linear-gradient(45deg, #fafbfd, #fafbfd 10px, #f5f6f8 10px, #f5f6f8 20px);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

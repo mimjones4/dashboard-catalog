@@ -1,16 +1,16 @@
 {
-  "name": "mock-interview-simulator",
+  "name": "mockmentor",
   "version": "1.0.0",
-  "description": "AI-powered mock interview simulator: upload your resume and a job description, do a realistic voice/text mock interview, and get structured coaching feedback with cross-session pattern tracking.",
-  "main": "server.js",
+  "description": "MockMentor — realistic AI mock interviews tailored to your resume and the job description, on Cloudflare Pages + Workers + D1.",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "wrangler pages dev public --compatibility-date=2024-11-01 --d1 DB=mockmentor",
+    "db:init:local": "wrangler d1 execute mockmentor --local --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute mockmentor --remote --file=./schema.sql",
+    "deploy": "wrangler pages deploy public"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.74.0",
-    "express": "^4.21.0"
+  "devDependencies": {
+    "wrangler": "^3.90.0"
   }
 }

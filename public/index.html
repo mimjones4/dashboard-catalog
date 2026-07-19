@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mock Interview Simulator</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>MockMentor — Realistic AI Mock Interviews Tailored to Your Resume &amp; the Job</title>
+  <meta name="description" content="Upload your resume and paste the job description for a realistic, role-specific mock interview with follow-up questions and honest, question-by-question feedback. First mock free." />
+  <link rel="stylesheet" href="/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
+    <a class="brand" href="/">
       <span class="brand-icon">🎙️</span>
-      <span class="brand-name">Mock Interview Simulator</span>
-    </div>
+      <span class="brand-name">MockMentor</span>
+    </a>
     <nav>
-      <button id="nav-new" class="nav-btn active">New Interview</button>
-      <button id="nav-progress" class="nav-btn">My Progress <span id="session-count" class="badge hidden"></span></button>
+      <a href="/how-it-works" class="nav-link">How it works</a>
+      <a href="/tips/" class="nav-link">Interview tips</a>
+      <span id="unlock-pill" class="pill hidden">✓ Unlimited unlocked</span>
     </nav>
   </header>
 
@@ -25,15 +27,15 @@
     <section id="view-setup" class="view">
       <div class="intro">
         <h1>Practice the interview before it counts.</h1>
-        <p>Upload your resume and paste the job description. You'll get a realistic mock interview tailored to what this specific role actually requires — then detailed, question-by-question coaching feedback.</p>
+        <p>Upload your resume and paste the job description. You'll get a realistic mock interview tailored to what this specific role actually requires — then detailed, question-by-question coaching feedback. Your first mock is free.</p>
       </div>
 
       <div class="setup-grid">
         <div class="card">
           <h2>1. Your resume</h2>
           <div class="tab-row">
-            <button id="tab-pdf" class="tab active">Upload PDF</button>
-            <button id="tab-text" class="tab">Paste text</button>
+            <button id="tab-pdf" class="tab active" type="button">Upload PDF</button>
+            <button id="tab-text" class="tab" type="button">Paste text</button>
           </div>
           <div id="resume-pdf-panel">
             <label id="dropzone" for="resume-file" class="dropzone">
@@ -53,7 +55,8 @@
       </div>
 
       <div class="center">
-        <button id="btn-analyze" class="primary big">Analyze &amp; prepare my interview</button>
+        <button id="btn-analyze" class="primary big" type="button">Analyze &amp; prepare my interview</button>
+        <p id="free-note" class="muted small"></p>
         <p id="setup-error" class="error hidden"></p>
       </div>
     </section>
@@ -89,8 +92,8 @@
         </div>
       </div>
       <div class="center">
-        <button id="btn-start" class="primary big">Start the interview</button>
-        <button id="btn-back-setup" class="ghost">Back</button>
+        <button id="btn-start" class="primary big" type="button">Start the interview</button>
+        <button id="btn-back-setup" class="ghost" type="button">Back</button>
       </div>
     </section>
 
@@ -101,7 +104,7 @@
           <h2 id="interview-role"></h2>
           <p id="interview-progress" class="muted"></p>
         </div>
-        <button id="btn-end-early" class="ghost danger">End interview early</button>
+        <button id="btn-end-early" class="ghost danger" type="button">End interview early</button>
       </div>
 
       <div id="chat" class="chat"></div>
@@ -109,8 +112,8 @@
       <div class="composer card">
         <textarea id="answer-input" rows="3" placeholder="Type your answer, or use the mic to speak it…"></textarea>
         <div class="composer-actions">
-          <button id="btn-mic" class="mic" title="Answer by voice">🎤</button>
-          <button id="btn-send" class="primary">Send answer</button>
+          <button id="btn-mic" class="mic" type="button" title="Answer by voice">🎤</button>
+          <button id="btn-send" class="primary" type="button">Send answer</button>
         </div>
         <p id="mic-status" class="muted small hidden"></p>
         <p id="interview-error" class="error hidden"></p>
@@ -142,33 +145,30 @@
       <h2 class="section-title">Question-by-question</h2>
       <div id="per-question"></div>
 
-      <div id="feedback-patterns-block" class="hidden">
-        <h2 class="section-title">📈 Patterns across your mock interviews</h2>
-        <div id="feedback-patterns"></div>
-      </div>
-
       <div class="center">
-        <button id="btn-new-interview" class="primary big">Practice another interview</button>
-        <button id="btn-view-progress" class="ghost">View my progress</button>
+        <button id="btn-new-interview" class="primary big" type="button">Practice another interview</button>
       </div>
     </section>
 
-    <!-- ============ PROGRESS VIEW ============ -->
-    <section id="view-progress" class="view hidden">
-      <div class="intro">
-        <h1>My progress</h1>
-        <p>Every mock interview you complete is saved in this browser. Once you have two or more, patterns across sessions show up here.</p>
-      </div>
-      <div id="sessions-list"></div>
-      <div id="progress-patterns-wrap" class="hidden">
+    <!-- ============ UNLOCK MODAL ============ -->
+    <div id="unlock-modal" class="modal-backdrop hidden">
+      <div class="modal card">
+        <button id="modal-close" class="modal-close" type="button" aria-label="Close">✕</button>
+        <h2>Unlock unlimited mock interviews</h2>
+        <p>You've used your free mock. Job hunting is a burst — so this is a <strong>one-time $5.99</strong>, not a subscription. Pay once and get:</p>
+        <ul class="perks">
+          <li>Unlimited mock interviews</li>
+          <li>Full question sets &amp; follow-ups</li>
+          <li>Complete question-by-question feedback</li>
+          <li>Cross-session pattern tracking <span class="soon">(coming soon)</span></li>
+        </ul>
         <div class="center">
-          <button id="btn-analyze-patterns" class="primary">Analyze my patterns</button>
+          <button id="btn-unlock" class="primary big" type="button">Unlock for $5.99</button>
+          <p id="unlock-error" class="error hidden"></p>
+          <p class="muted small">Secure one-time payment via Stripe. No account required.</p>
         </div>
-        <div id="progress-patterns"></div>
-        <p id="patterns-error" class="error hidden center"></p>
       </div>
-      <p id="no-sessions" class="muted center hidden">No completed interviews yet. Do your first mock and it'll show up here.</p>
-    </section>
+    </div>
 
     <!-- ============ LOADING OVERLAY ============ -->
     <div id="overlay" class="overlay hidden">
@@ -177,6 +177,12 @@
     </div>
   </main>
 
-  <script src="app.js"></script>
+  <footer class="site-footer">
+    <a href="/how-it-works">How it works</a>
+    <a href="/tips/">Interview tips</a>
+    <span class="muted small">MockMentor · Your first mock interview is free.</span>
+  </footer>
+
+  <script src="/app.js"></script>
 </body>
 </html>

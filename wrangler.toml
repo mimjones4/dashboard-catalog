@@ -1,0 +1,32 @@
+name = "mockmentor"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "public"
+
+# --- D1: anonymous-user paywall state (Phase 1) ---
+# Create the DB, then paste the returned database_id below:
+#   wrangler d1 create mockmentor
+#   wrangler d1 execute mockmentor --remote --file=./schema.sql
+[[d1_databases]]
+binding = "DB"
+database_name = "mockmentor"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# --- Rate limiting (from day one, on top of the dashboard WAF rule) ---
+# Application-level limiter applied at /api/analyze (the expensive call).
+# If this binding isn't available on your Pages plan, the code fails open and
+# the dashboard WAF rate-limit rule (see DEPLOY.md) remains authoritative.
+[[unsafe.bindings]]
+name = "RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 12, period = 60 }
+
+# --- Non-secret vars ---
+[vars]
+CLAUDE_MODEL = "claude-opus-4-8"
+
+# --- Secrets (DO NOT put these here; set with `wrangler pages secret put`) ---
+#   ANTHROPIC_API_KEY
+#   STRIPE_SECRET_KEY        (sk_live_...)
+#   STRIPE_PRICE_ID          (price_...  LIVE-mode one-time $5.99 price)
+#   STRIPE_WEBHOOK_SECRET    (whsec_...  from the live webhook endpoint)
